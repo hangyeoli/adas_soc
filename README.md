@@ -64,6 +64,9 @@ FPGA는 정수 네트워크 연산과 raw detection head 생성까지 담당합�
 
 ## 실보드 검증 결과
 
+카메라 영상 표시 수정, 100프레임 단계별 통계, 22-op 병목 순위와 HLS 최적화 검토는
+[카메라 성능 점검](09_docs/CAMERA_PERFORMANCE_REVIEW.md)을 참고하세요.
+
 Ubuntu 24.04.2 LTS, kernel `6.8.0-1015-xilinx` 환경에서 웹 UI로 FPGA를 로딩하고 전체 체인을 실행했습니다.
 
 | 검증 항목 | 실측 결과 |

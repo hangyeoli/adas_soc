@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "golden_input_bytes_match": true,
+  "rgb_crop_padding_test": true,
+  "fpga_heads_byte_exact": true,
+  "corrected_bias_match": true,
+  "decoder_matches_independent_nchw": true,
+  "nms_class_test": true,
+  "confidence": 0.25,
+  "nms_iou": 0.45,
+  "golden_detections": [
+    {
+      "label": "car",
+      "score": 0.6132230162620544,
+      "box": [
+        0.7725960183888674,
+        0.28694352010885876,
+        1.0,
+        0.6784962366024654
+      ]
+    },
+    {
+      "label": "car",
+      "score": 0.4935140609741211,
+      "box": [
+        0.68080984801054,
+        0.3248538109991286,
+        0.8536519184708595,
+        0.5197797748777602
+      ]
+    },
+    {
+      "label": "car",
+      "score": 0.36738884449005127,
+      "box": [
+        0.6101070819422603,
+        0.32758183611763847,
+        0.7214352069422603,
+        0.43978316916359794
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 """Live Pleomax camera -> KR260 FPGA -> YOLO decode/NMS -> annotated JPEG."""
 import json
+import csv
 import fcntl
 import math
 from pathlib import Path
@@ -106,7 +107,9 @@ class LatestCamera:
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
         self.cap.set(cv2.CAP_PROP_FPS, 30)
-        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        # Keep USB capture queued; the reader thread still publishes only its
+        # latest frame. A single V4L2 buffer starves this camera's capture queue.
+        self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 4)
         if not self.cap.isOpened():
             raise RuntimeError(f'Could not open {device}')
         self.lock = threading.Lock()
@@ -133,10 +136,12 @@ class LatestCamera:
                 count, started = 0, now
             with self.lock:
                 self.frame = frame
+                self.captured_at = now
                 self.sequence += 1
 
     def latest(self):
         with self.lock:
+            self.selected_capture_at = getattr(self, 'captured_at', time.monotonic())
             return self.sequence, None if self.frame is None else self.frame.copy(), self.capture_fps
 
     def close(self):
@@ -165,7 +170,9 @@ class LiveRuntime:
         self.timed_out = False
 
     def run(self, input_bytes):
+        started = time.monotonic()
         self.buffers['input'].write(input_bytes)
+        self.input_ms = (time.monotonic() - started) * 1000
         durations = []
         for op in self.desc['ops']:
             kind, engine = op['kind'], self.engines[op['engine']]
@@ -200,6 +207,7 @@ class LiveRuntime:
                 self.timed_out = True
                 raise
             durations.append(ms)
+        self.op_ms = durations
         return (self.buffers[15].read(4320), self.buffers[22].read(17280), sum(durations))
 
     def close(self):
@@ -209,7 +217,7 @@ class LiveRuntime:
             buf.close()
 
 
-def main():
+def main(frame_limit=0):
     RESULTS.mkdir(exist_ok=True)
     STOP.unlink(missing_ok=True)
     status = {'status': 'starting', 'device': '/dev/video0', 'source': [640, 480], 'crop': [640, 360], 'network': [512, 288], 'capture_baseline_fps': 27.61}
@@ -223,6 +231,9 @@ def main():
         yolo = {x['index']: x for x in manifest['layers'] if x['type'] == 'yolo'}
         anchors = np.asarray(yolo[16]['anchors'], dtype=np.float32).reshape(-1, 2)
         processed, dropped, previous_seq = 0, 0, 0
+        measurements = []
+        cpu_previous = cpu_sample()
+        cpu_time = time.monotonic()
         while not STOP.exists():
             seq, frame, capture_fps = camera.latest()
             if camera.error and frame is None:
@@ -232,15 +243,20 @@ def main():
                 continue
             dropped += max(0, seq - previous_seq - 1) if previous_seq else 0
             previous_seq = seq
+            frame_started = time.monotonic()
             display, input_bytes = preprocess(frame)
+            preprocess_ms = (time.monotonic() - frame_started) * 1000
             started = time.monotonic()
             head1, head2, accelerator_ms = runtime.run(input_bytes)
             infer_ms = (time.monotonic() - started) * 1000
+            decode_started = time.monotonic()
             detections = np.concatenate([
                 decode_head(head1, 9, 16, float(yolo[16]['output_scale']), yolo[16]['mask'], anchors, 0.25),
                 decode_head(head2, 18, 32, float(yolo[23]['output_scale']), yolo[23]['mask'], anchors, 0.25),
             ])
             selected = nms(detections)
+            decode_ms = (time.monotonic() - decode_started) * 1000
+            jpeg_started = time.monotonic()
             annotated = annotate(display, selected, infer_ms, capture_fps)
             ok, encoded = cv2.imencode('.jpg', annotated, [cv2.IMWRITE_JPEG_QUALITY, 85])
             if not ok:
@@ -248,6 +264,7 @@ def main():
             temporary = FRAME.with_suffix('.tmp')
             temporary.write_bytes(encoded.tobytes())
             temporary.replace(FRAME)
+            jpeg_ms = (time.monotonic() - jpeg_started) * 1000
             processed += 1
             status.update(status='running', processed_frames=processed, dropped_frames=dropped,
                           capture_fps=round(capture_fps, 2), inference_fps=round(1000.0 / infer_ms, 3),
@@ -256,6 +273,39 @@ def main():
                                        'box': [round(float(v), 4) for v in x[:4]]} for x in selected],
                           updated_at=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()))
             hardware.save(STATUS, status)
+            now = time.monotonic()
+            cpu_current = cpu_sample()
+            total_delta = cpu_current[0] - cpu_previous[0]
+            row = dict(frame=processed, capture_fps=capture_fps,
+                       preprocess_ms=preprocess_ms, dma_input_ms=runtime.input_ms,
+                       fpga_total_ms=accelerator_ms, runtime_ms=infer_ms,
+                       decode_nms_ms=decode_ms, jpeg_publish_ms=jpeg_ms,
+                       processing_ms=(now-frame_started)*1000,
+                       frame_available_to_publish_ms=(now-camera.selected_capture_at)*1000,
+                       output_interval_ms=(now-cpu_time)*1000,
+                       dropped_frames=dropped, detections=len(selected),
+                       cpu_percent=100*(1-(cpu_current[1]-cpu_previous[1])/max(1,total_delta)),
+                       temperature_c=temperature_sample())
+            row.update(memory_sample())
+            row.update({f'op_{op["manifest_index"]:02d}_{op["kind"]}_ms': ms
+                        for op, ms in zip(runtime.desc['ops'], runtime.op_ms)})
+            if frame_limit:
+                measurements.append(row)
+            cpu_previous, cpu_time = cpu_current, now
+            if frame_limit and processed >= frame_limit:
+                fields = list(row)
+                with (RESULTS / 'benchmark.csv').open('w', newline='') as output:
+                    writer = csv.DictWriter(output, fieldnames=fields)
+                    writer.writeheader()
+                    writer.writerows(measurements)
+                summary = {key: statistics([r[key] for r in measurements])
+                           for key in fields if key not in ('frame',)}
+                hardware.save(RESULTS / 'benchmark.json', dict(frames=processed, stats=summary,
+                    dropped_frames=dropped, notes=['processing_ms excludes camera exposure and browser/network rendering',
+                    'output_interval_ms includes waits; first interval includes camera startup',
+                    'frame_available_to_publish_ms starts after OpenCV read; excludes sensor exposure and browser rendering',
+                    'FPGA times include polling and DDR stalls; CPU is whole-system utilization']))
+                break
     except Exception as exc:
         status.update(status='failed', error=f'{type(exc).__name__}: {exc}', updated_at=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()))
         if runtime and runtime.timed_out:
@@ -283,7 +333,37 @@ def main():
         STOP.unlink(missing_ok=True)
 
 
+def cpu_sample():
+    values = [int(v) for v in Path('/proc/stat').read_text().splitlines()[0].split()[1:9]]
+    return sum(values), values[3] + values[4]
+
+
+def temperature_sample():
+    for path in ('/sys/class/thermal/thermal_zone0/temp', '/sys/class/hwmon/hwmon0/temp1_input'):
+        value = hardware.read(path, '')
+        if value:
+            return float(value)/1000
+    return None
+
+
+def statistics(values):
+    values = [v for v in values if v is not None and np.isfinite(v)]
+    if not values:
+        return dict(mean=None, p50=None, p95=None, p99=None)
+    return dict(mean=float(np.mean(values)),p50=float(np.percentile(values,50)),
+                p95=float(np.percentile(values,95)),p99=float(np.percentile(values,99)))
+
+
+def memory_sample():
+    values = {line.split(':')[0]: int(line.split()[1]) for line in Path('/proc/meminfo').read_text().splitlines()}
+    return dict(cma_used_kb=values['CmaTotal']-values['CmaFree'], cma_free_kb=values['CmaFree'])
+
+
 if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--frames', type=int, default=0, help='Stop and write benchmark JSON/CSV after N frames')
+    args = parser.parse_args()
     with open('/run/lock/kr260-adas.lock', 'w') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        main()
+        main(args.frames)

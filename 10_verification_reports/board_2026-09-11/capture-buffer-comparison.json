@@ -1,0 +1,7 @@
+{
+  "test": "camera only, sequential 30-frame tests including startup",
+  "buffers_1_fps": 3.8408145206138857,
+  "buffers_4_fps": 7.109139374981425,
+  "frames_each": 30,
+  "limitation": "Not simultaneous; lighting/exposure may vary. FPGA throughput not measured by this test."
+}

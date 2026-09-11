@@ -10,7 +10,22 @@ let latest = null, requestPending = false, frameUrl = '';
 for (const [layer, kind] of chain) { const box=document.createElement('div'); box.id='op-'+layer; box.className='op'; box.textContent=String(layer).padStart(2,'0'); const sub=document.createElement('small'); sub.textContent=kind; box.append(sub); $('op-grid').append(box); }
 function metricState(id, status, empty='미실행') { const el=$(id); el.textContent=labels[status]||empty; el.className='metric-value '+(status||''); }
 function note(text, error=false) { $('notice').textContent=text; $('notice').className='notice'+(error?' error':''); }
-async function cameraImage(show) { $('camera-frame').classList.toggle('visible', show); $('camera-placeholder').hidden=show; if(!show||!token)return; try{const res=await fetch('/api/camera.jpg',{headers:{'X-Control-Token':token}});if(!res.ok)return;const next=URL.createObjectURL(await res.blob());$('camera-frame').src=next;if(frameUrl)URL.revokeObjectURL(frameUrl);frameUrl=next;}catch(e){} }
+let imagePending = false, imageRevision = '';
+async function cameraImage(show, revision) {
+  if (!show) { $('camera-frame').classList.remove('visible'); $('camera-placeholder').hidden=false; imageRevision=''; return; }
+  if (!token) { $('camera-placeholder').hidden=false; $('camera-placeholder').textContent='실행 제어 키를 입력하면 카메라 영상이 표시됩니다.'; return; }
+  if (imagePending || revision===imageRevision) return;
+  imagePending=true;
+  try {
+    const res=await fetch('/api/camera.jpg',{headers:{'X-Control-Token':token}});
+    if(!res.ok) throw Error('영상 요청 실패: HTTP '+res.status);
+    const next=URL.createObjectURL(await res.blob());
+    const img=$('camera-frame');
+    img.onload=()=>{img.classList.add('visible');$('camera-placeholder').hidden=true;if(frameUrl)URL.revokeObjectURL(frameUrl);frameUrl=next;imageRevision=revision;imagePending=false;};
+    img.onerror=()=>{URL.revokeObjectURL(next);imagePending=false;$('camera-placeholder').hidden=false;$('camera-placeholder').textContent='영상 표시 실패. 새로고침 후 다시 확인하세요.';};
+    img.src=next;
+  } catch(e) {imagePending=false;$('camera-placeholder').hidden=false;$('camera-placeholder').textContent=e.message;}
+}
 function render(s) {
   latest=s; $('connection').textContent='● 보드 연결됨';
   $('fpga-state').textContent=s.fpga_ready?'로딩 완료':'로딩 필요'; $('fpga-state').className='metric-value '+(s.fpga_ready?'passed':'');
@@ -27,7 +42,7 @@ function render(s) {
   $('capture-fps').textContent=camera.capture_fps!==undefined?Number(camera.capture_fps).toFixed(1):'—'; $('inference-fps').textContent=camera.inference_fps!==undefined?Number(camera.inference_fps).toFixed(2):'—'; $('latency-detail').textContent=camera.inference_ms!==undefined?`${Number(camera.inference_ms).toFixed(1)} ms · FPGA IP 합계 ${Number(camera.accelerator_ms).toFixed(1)} ms`:'실시간 입력 대기 중';
   $('processed').textContent=camera.processed_frames||0; $('dropped').textContent=camera.dropped_frames||0; const detections=camera.detections||[]; $('detection-count').textContent=detections.length; $('detection-list').replaceChildren();
   if(detections.length){for(const d of detections){const row=document.createElement('div');row.textContent=`${d.class} · ${(d.score*100).toFixed(1)}%`; $('detection-list').append(row);}} else $('detection-list').textContent='검출 결과 없음';
-  cameraImage(camera.status==='running'&&camera.processed_frames>0); $('camera-start').disabled=s.job.busy||requestPending||!s.fpga_ready||!s.cameras.length; $('camera-stop').disabled=!live||requestPending;
+  cameraImage(camera.status==='running'&&camera.processed_frames>0,camera.updated_at); $('camera-start').disabled=s.job.busy||requestPending||!s.fpga_ready||!s.cameras.length; $('camera-stop').disabled=!live||requestPending;
   document.querySelectorAll('[data-action]').forEach(b=>b.disabled=s.job.busy||requestPending||(b.dataset.action!=='load'&&!s.fpga_ready));
   if(live) note('실제 카메라 프레임을 FPGA 전체 체인으로 추론하고 있습니다. 최신 프레임만 처리합니다.'); else if(s.job.busy) note(`${s.job.action==='load'?'FPGA 로딩':'하드웨어 검증'} 진행 중입니다. 결과와 로그가 자동으로 갱신됩니다.`); else if(s.job.returncode!==null&&s.job.returncode!==0) note(camera.status==='failed'?(camera.error||'카메라 실행 실패'):(report?.error||'실행에 실패했습니다. 로그를 확인하세요.'),true); else if(full?.status==='passed') note('전체 체인 검증 통과 · Layer 0과 두 출력 헤드가 정답 데이터와 바이트 단위로 일치합니다.'); else note(s.fpga_ready?'FPGA 로딩 완료. 정답 검증 또는 카메라 추론을 시작할 수 있습니다.':'FPGA 로딩을 먼저 실행하세요.');
 }
@@ -37,4 +52,4 @@ document.querySelectorAll('[data-action]').forEach(button=>button.addEventListen
 $('camera-start').addEventListener('click',()=>act('/api/camera/start')); $('camera-stop').addEventListener('click',()=>act('/api/camera/stop'));
 $('save-token').addEventListener('click',()=>{token=$('token').value.trim();sessionStorage.setItem('kr260-control',token);note('제어 키를 저장했습니다.');});
 $('download').addEventListener('click',()=>{if(!latest)return;const blob=new Blob([JSON.stringify(latest,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='kr260-verification-'+new Date().toISOString().replaceAll(':','-')+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-refresh(); setInterval(refresh,2000);
+refresh(); setInterval(refresh,1000);
