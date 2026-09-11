@@ -1,0 +1,11 @@
+__pycache__/
+.control-token
+results/
+*.log
+adas.dts
+dma_bridge/*.o
+dma_bridge/*.ko
+dma_bridge/*.mod*
+dma_bridge/.*.cmd
+dma_bridge/Module.symvers
+dma_bridge/modules.order

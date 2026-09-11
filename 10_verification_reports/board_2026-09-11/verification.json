@@ -1,0 +1,615 @@
+{
+    "host":  "kria",
+    "kernel":  "6.8.0-1015-xilinx",
+    "time":  "2026-09-11T07:42:28Z",
+    "job":  {
+                "busy":  false,
+                "action":  "full",
+                "returncode":  0
+            },
+    "fpga":  {
+                 "status":  "passed",
+                 "bit_sha256":  "40491d47c3b848695dd3f51cb1633f172a472698abc7b131180ac96f693d80e3",
+                 "loaded_at":  "2026-09-11T07:41:41Z",
+                 "boot_id":  "aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3",
+                 "clock_hz":  "99999999",
+                 "overlay":  "applied"
+             },
+    "fpga_ready":  true,
+    "manager_state":  "operating",
+    "clock_hz":  "99999999",
+    "memory":  {
+                   "MemTotal":  3996384,
+                   "MemAvailable":  3547596,
+                   "CmaTotal":  819200,
+                   "CmaFree":  809352
+               },
+    "temperature_c":  28.552,
+    "cameras":  [
+
+                ],
+    "report":  {
+                   "status":  "passed",
+                   "mode":  "full",
+                   "started_at":  "2026-09-11T07:41:52Z",
+                   "bit_sha256":  "40491d47c3b848695dd3f51cb1633f172a472698abc7b131180ac96f693d80e3",
+                   "descriptor_sha256":  "f85be69b48a8ae7f8664e3e336dc2d9e55b0ed4b97eb811470183979a98dfd8a",
+                   "clock_hz":  "99999999",
+                   "ops":  [
+                               {
+                                   "layer":  0,
+                                   "kind":  "conv",
+                                   "status":  "passed",
+                                   "duration_ms":  381.348,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  1,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  90.455,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  2,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  145.995,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  3,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  25.446,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  4,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  78.553,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  5,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  7.514,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  6,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  46.434,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  7,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  2.551,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  8,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  36.831,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  9,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  1.04,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  10,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  62.96,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  11,
+                                   "kind":  "maxpool",
+                                   "status":  "completed",
+                                   "duration_ms":  1.536,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  12,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  245.606,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  13,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  38.702,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  14,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  62.948,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  15,
+                                   "kind":  "conv",
+                                   "status":  "passed",
+                                   "duration_ms":  2.385,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  17,
+                                   "kind":  "route",
+                                   "status":  "completed",
+                                   "duration_ms":  0.36,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  18,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  5.341,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  19,
+                                   "kind":  "upsample",
+                                   "status":  "completed",
+                                   "duration_ms":  0.541,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  20,
+                                   "kind":  "route",
+                                   "status":  "completed",
+                                   "duration_ms":  1.718,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  21,
+                                   "kind":  "conv",
+                                   "status":  "completed",
+                                   "duration_ms":  99.543,
+                                   "ap_ctrl":  "0xe"
+                               },
+                               {
+                                   "layer":  22,
+                                   "kind":  "conv",
+                                   "status":  "passed",
+                                   "duration_ms":  4.213,
+                                   "ap_ctrl":  "0xe"
+                               }
+                           ],
+                   "checks":  {
+                                  "0":  {
+                                            "status":  "passed",
+                                            "bytes":  2359296,
+                                            "mismatches":  0,
+                                            "first_mismatches":  [
+
+                                                                 ],
+                                            "actual_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa",
+                                            "expected_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa",
+                                            "reference":  {
+                                                              "source":  "04_layer0_contract/layer00_expected_output.bin",
+                                                              "source_layout":  "NHWC",
+                                                              "comparison_layout":  "NHWC",
+                                                              "source_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa"
+                                                          }
+                                        },
+                                  "15":  {
+                                             "status":  "passed",
+                                             "bytes":  4320,
+                                             "mismatches":  0,
+                                             "first_mismatches":  [
+
+                                                                  ],
+                                             "actual_sha256":  "b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c",
+                                             "expected_sha256":  "b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c",
+                                             "reference":  {
+                                                               "source":  "08_golden_model/int8_layers_sample/layer_15.bin",
+                                                               "source_layout":  "NCHW",
+                                                               "comparison_layout":  "NHWC",
+                                                               "shape_nhwc":  [
+                                                                                  9,
+                                                                                  16,
+                                                                                  30
+                                                                              ],
+                                                               "source_sha256":  "e188e305d591de2f1699e6415602057e1d4f740e0907d9fcff76984c72c49cbf"
+                                                           }
+                                         },
+                                  "22":  {
+                                             "status":  "passed",
+                                             "bytes":  17280,
+                                             "mismatches":  0,
+                                             "first_mismatches":  [
+
+                                                                  ],
+                                             "actual_sha256":  "e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa",
+                                             "expected_sha256":  "e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa",
+                                             "reference":  {
+                                                               "source":  "08_golden_model/int8_layers_sample/layer_22.bin",
+                                                               "source_layout":  "NCHW",
+                                                               "comparison_layout":  "NHWC",
+                                                               "shape_nhwc":  [
+                                                                                  18,
+                                                                                  32,
+                                                                                  30
+                                                                              ],
+                                                               "source_sha256":  "a19af88b4d94a2dcfd6b72bb8c8b480cbeb6d2c2f63030d0800932fea01936bd"
+                                                           }
+                                         }
+                              },
+                   "warnings":  [
+                                    "Descriptor build hashes refer to an older export. Current HWH base addresses and all register offsets were cross-checked before execution."
+                                ],
+                   "boot_id":  "aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3",
+                   "dma_bytes":  29945856,
+                   "dma_addresses":  {
+                                         "input":  "0x44a00000",
+                                         "weights":  "0x44b00000",
+                                         "bias":  "0x447c0000",
+                                         "accum":  "0x45400000",
+                                         "0":  "0x46200000",
+                                         "1":  "0x46500000",
+                                         "2":  "0x46600000",
+                                         "3":  "0x44a80000",
+                                         "4":  "0x46800000",
+                                         "5":  "0x45380000",
+                                         "6":  "0x46180000",
+                                         "7":  "0x447e0000",
+                                         "8":  "0x453c0000",
+                                         "9":  "0x447d0000",
+                                         "10":  "0x449e0000",
+                                         "11":  "0x44ae0000",
+                                         "12":  "0x46440000",
+                                         "13":  "0x449d0000",
+                                         "14":  "0x45360000",
+                                         "15":  "0x447c4000",
+                                         "17":  "0x44a70000",
+                                         "18":  "0x447c8000",
+                                         "19":  "0x461e0000",
+                                         "20":  "0x46480000",
+                                         "21":  "0x464c0000",
+                                         "22":  "0x447f8000"
+                                     },
+                   "initial_controls":  {
+                                            "conv_engine_0":  "0x4",
+                                            "maxpool_engine_0":  "0x4",
+                                            "upsample_engine_0":  "0x4",
+                                            "route_concat_engine_0":  "0x4"
+                                        },
+                   "wall_ms":  3281.149,
+                   "accelerator_ms":  1342.02,
+                   "finished_at":  "2026-09-11T07:41:56Z"
+               },
+    "layer0":  {
+                   "status":  "passed",
+                   "mode":  "layer0",
+                   "started_at":  "2026-09-11T07:37:47Z",
+                   "bit_sha256":  "40491d47c3b848695dd3f51cb1633f172a472698abc7b131180ac96f693d80e3",
+                   "descriptor_sha256":  "f85be69b48a8ae7f8664e3e336dc2d9e55b0ed4b97eb811470183979a98dfd8a",
+                   "clock_hz":  "99999999",
+                   "ops":  [
+                               {
+                                   "layer":  0,
+                                   "kind":  "conv",
+                                   "status":  "passed",
+                                   "duration_ms":  381.349,
+                                   "ap_ctrl":  "0xe"
+                               }
+                           ],
+                   "checks":  {
+                                  "0":  {
+                                            "status":  "passed",
+                                            "bytes":  2359296,
+                                            "mismatches":  0,
+                                            "first_mismatches":  [
+
+                                                                 ],
+                                            "actual_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa",
+                                            "expected_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa"
+                                        }
+                              },
+                   "warnings":  [
+                                    "Descriptor build hashes refer to an older export. Current HWH base addresses and all register offsets were cross-checked before execution."
+                                ],
+                   "boot_id":  "aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3",
+                   "dma_bytes":  25657344,
+                   "dma_addresses":  {
+                                         "input":  "0x44800000",
+                                         "weights":  "0x44900000",
+                                         "bias":  "0x447c0000",
+                                         "accum":  "0x45200000",
+                                         "0":  "0x46000000"
+                                     },
+                   "initial_controls":  {
+                                            "conv_engine_0":  "0x4",
+                                            "maxpool_engine_0":  "0x4",
+                                            "upsample_engine_0":  "0x4",
+                                            "route_concat_engine_0":  "0x4"
+                                        },
+                   "wall_ms":  2756.174,
+                   "accelerator_ms":  381.349,
+                   "finished_at":  "2026-09-11T07:37:50Z"
+               },
+    "full":  {
+                 "status":  "passed",
+                 "mode":  "full",
+                 "started_at":  "2026-09-11T07:41:52Z",
+                 "bit_sha256":  "40491d47c3b848695dd3f51cb1633f172a472698abc7b131180ac96f693d80e3",
+                 "descriptor_sha256":  "f85be69b48a8ae7f8664e3e336dc2d9e55b0ed4b97eb811470183979a98dfd8a",
+                 "clock_hz":  "99999999",
+                 "ops":  [
+                             {
+                                 "layer":  0,
+                                 "kind":  "conv",
+                                 "status":  "passed",
+                                 "duration_ms":  381.348,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  1,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  90.455,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  2,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  145.995,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  3,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  25.446,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  4,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  78.553,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  5,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  7.514,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  6,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  46.434,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  7,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  2.551,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  8,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  36.831,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  9,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  1.04,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  10,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  62.96,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  11,
+                                 "kind":  "maxpool",
+                                 "status":  "completed",
+                                 "duration_ms":  1.536,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  12,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  245.606,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  13,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  38.702,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  14,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  62.948,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  15,
+                                 "kind":  "conv",
+                                 "status":  "passed",
+                                 "duration_ms":  2.385,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  17,
+                                 "kind":  "route",
+                                 "status":  "completed",
+                                 "duration_ms":  0.36,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  18,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  5.341,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  19,
+                                 "kind":  "upsample",
+                                 "status":  "completed",
+                                 "duration_ms":  0.541,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  20,
+                                 "kind":  "route",
+                                 "status":  "completed",
+                                 "duration_ms":  1.718,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  21,
+                                 "kind":  "conv",
+                                 "status":  "completed",
+                                 "duration_ms":  99.543,
+                                 "ap_ctrl":  "0xe"
+                             },
+                             {
+                                 "layer":  22,
+                                 "kind":  "conv",
+                                 "status":  "passed",
+                                 "duration_ms":  4.213,
+                                 "ap_ctrl":  "0xe"
+                             }
+                         ],
+                 "checks":  {
+                                "0":  {
+                                          "status":  "passed",
+                                          "bytes":  2359296,
+                                          "mismatches":  0,
+                                          "first_mismatches":  [
+
+                                                               ],
+                                          "actual_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa",
+                                          "expected_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa",
+                                          "reference":  {
+                                                            "source":  "04_layer0_contract/layer00_expected_output.bin",
+                                                            "source_layout":  "NHWC",
+                                                            "comparison_layout":  "NHWC",
+                                                            "source_sha256":  "06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa"
+                                                        }
+                                      },
+                                "15":  {
+                                           "status":  "passed",
+                                           "bytes":  4320,
+                                           "mismatches":  0,
+                                           "first_mismatches":  [
+
+                                                                ],
+                                           "actual_sha256":  "b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c",
+                                           "expected_sha256":  "b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c",
+                                           "reference":  {
+                                                             "source":  "08_golden_model/int8_layers_sample/layer_15.bin",
+                                                             "source_layout":  "NCHW",
+                                                             "comparison_layout":  "NHWC",
+                                                             "shape_nhwc":  [
+                                                                                9,
+                                                                                16,
+                                                                                30
+                                                                            ],
+                                                             "source_sha256":  "e188e305d591de2f1699e6415602057e1d4f740e0907d9fcff76984c72c49cbf"
+                                                         }
+                                       },
+                                "22":  {
+                                           "status":  "passed",
+                                           "bytes":  17280,
+                                           "mismatches":  0,
+                                           "first_mismatches":  [
+
+                                                                ],
+                                           "actual_sha256":  "e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa",
+                                           "expected_sha256":  "e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa",
+                                           "reference":  {
+                                                             "source":  "08_golden_model/int8_layers_sample/layer_22.bin",
+                                                             "source_layout":  "NCHW",
+                                                             "comparison_layout":  "NHWC",
+                                                             "shape_nhwc":  [
+                                                                                18,
+                                                                                32,
+                                                                                30
+                                                                            ],
+                                                             "source_sha256":  "a19af88b4d94a2dcfd6b72bb8c8b480cbeb6d2c2f63030d0800932fea01936bd"
+                                                         }
+                                       }
+                            },
+                 "warnings":  [
+                                  "Descriptor build hashes refer to an older export. Current HWH base addresses and all register offsets were cross-checked before execution."
+                              ],
+                 "boot_id":  "aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3",
+                 "dma_bytes":  29945856,
+                 "dma_addresses":  {
+                                       "input":  "0x44a00000",
+                                       "weights":  "0x44b00000",
+                                       "bias":  "0x447c0000",
+                                       "accum":  "0x45400000",
+                                       "0":  "0x46200000",
+                                       "1":  "0x46500000",
+                                       "2":  "0x46600000",
+                                       "3":  "0x44a80000",
+                                       "4":  "0x46800000",
+                                       "5":  "0x45380000",
+                                       "6":  "0x46180000",
+                                       "7":  "0x447e0000",
+                                       "8":  "0x453c0000",
+                                       "9":  "0x447d0000",
+                                       "10":  "0x449e0000",
+                                       "11":  "0x44ae0000",
+                                       "12":  "0x46440000",
+                                       "13":  "0x449d0000",
+                                       "14":  "0x45360000",
+                                       "15":  "0x447c4000",
+                                       "17":  "0x44a70000",
+                                       "18":  "0x447c8000",
+                                       "19":  "0x461e0000",
+                                       "20":  "0x46480000",
+                                       "21":  "0x464c0000",
+                                       "22":  "0x447f8000"
+                                   },
+                 "initial_controls":  {
+                                          "conv_engine_0":  "0x4",
+                                          "maxpool_engine_0":  "0x4",
+                                          "upsample_engine_0":  "0x4",
+                                          "route_concat_engine_0":  "0x4"
+                                      },
+                 "wall_ms":  3281.149,
+                 "accelerator_ms":  1342.02,
+                 "finished_at":  "2026-09-11T07:41:56Z"
+             },
+    "log":  "2026-09-11 07:41:52 UTC | full\nAllocating CMA buffers with verified contiguous physical addresses\nLayer 00: conv\nLayer 00: 381.348 ms, mismatches 0/2359296\nLayer 01: maxpool\nLayer 02: conv\nLayer 03: maxpool\nLayer 04: conv\nLayer 05: maxpool\nLayer 06: conv\nLayer 07: maxpool\nLayer 08: conv\nLayer 09: maxpool\nLayer 10: conv\nLayer 11: maxpool\nLayer 12: conv\nLayer 13: conv\nLayer 14: conv\nLayer 15: conv\nLayer 15: 2.385 ms, mismatches 0/4320\nLayer 17: route\nLayer 18: conv\nLayer 19: upsample\nLayer 20: route\nLayer 21: conv\nLayer 22: conv\nLayer 22: 4.213 ms, mismatches 0/17280\n{\n  \"status\": \"passed\",\n  \"mode\": \"full\",\n  \"started_at\": \"2026-09-11T07:41:52Z\",\n  \"bit_sha256\": \"40491d47c3b848695dd3f51cb1633f172a472698abc7b131180ac96f693d80e3\",\n  \"descriptor_sha256\": \"f85be69b48a8ae7f8664e3e336dc2d9e55b0ed4b97eb811470183979a98dfd8a\",\n  \"clock_hz\": \"99999999\",\n  \"ops\": [\n    {\n      \"layer\": 0,\n      \"kind\": \"conv\",\n      \"status\": \"passed\",\n      \"duration_ms\": 381.348,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 1,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 90.455,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 2,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 145.995,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 3,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 25.446,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 4,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 78.553,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 5,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 7.514,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 6,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 46.434,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 7,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 2.551,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 8,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 36.831,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 9,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 1.04,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 10,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 62.96,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 11,\n      \"kind\": \"maxpool\",\n      \"status\": \"completed\",\n      \"duration_ms\": 1.536,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 12,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 245.606,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 13,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 38.702,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 14,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 62.948,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 15,\n      \"kind\": \"conv\",\n      \"status\": \"passed\",\n      \"duration_ms\": 2.385,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 17,\n      \"kind\": \"route\",\n      \"status\": \"completed\",\n      \"duration_ms\": 0.36,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 18,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 5.341,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 19,\n      \"kind\": \"upsample\",\n      \"status\": \"completed\",\n      \"duration_ms\": 0.541,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 20,\n      \"kind\": \"route\",\n      \"status\": \"completed\",\n      \"duration_ms\": 1.718,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 21,\n      \"kind\": \"conv\",\n      \"status\": \"completed\",\n      \"duration_ms\": 99.543,\n      \"ap_ctrl\": \"0xe\"\n    },\n    {\n      \"layer\": 22,\n      \"kind\": \"conv\",\n      \"status\": \"passed\",\n      \"duration_ms\": 4.213,\n      \"ap_ctrl\": \"0xe\"\n    }\n  ],\n  \"checks\": {\n    \"0\": {\n      \"status\": \"passed\",\n      \"bytes\": 2359296,\n      \"mismatches\": 0,\n      \"first_mismatches\": [],\n      \"actual_sha256\": \"06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa\",\n      \"expected_sha256\": \"06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa\",\n      \"reference\": {\n        \"source\": \"04_layer0_contract/layer00_expected_output.bin\",\n        \"source_layout\": \"NHWC\",\n        \"comparison_layout\": \"NHWC\",\n        \"source_sha256\": \"06ef40440ce7c3d47bce3bf965d5061fcb63cea370b825041c3e30c6d9d731fa\"\n      }\n    },\n    \"15\": {\n      \"status\": \"passed\",\n      \"bytes\": 4320,\n      \"mismatches\": 0,\n      \"first_mismatches\": [],\n      \"actual_sha256\": \"b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c\",\n      \"expected_sha256\": \"b6369fa71aea860b2790a0f26d539a12b3fbe3db90c4b103b47d25d9fe78413c\",\n      \"reference\": {\n        \"source\": \"08_golden_model/int8_layers_sample/layer_15.bin\",\n        \"source_layout\": \"NCHW\",\n        \"comparison_layout\": \"NHWC\",\n        \"shape_nhwc\": [\n          9,\n          16,\n          30\n        ],\n        \"source_sha256\": \"e188e305d591de2f1699e6415602057e1d4f740e0907d9fcff76984c72c49cbf\"\n      }\n    },\n    \"22\": {\n      \"status\": \"passed\",\n      \"bytes\": 17280,\n      \"mismatches\": 0,\n      \"first_mismatches\": [],\n      \"actual_sha256\": \"e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa\",\n      \"expected_sha256\": \"e2f554826791c22b2e03ac55bf2e0310a3771dcc5791c8c64c5601112bf98afa\",\n      \"reference\": {\n        \"source\": \"08_golden_model/int8_layers_sample/layer_22.bin\",\n        \"source_layout\": \"NCHW\",\n        \"comparison_layout\": \"NHWC\",\n        \"shape_nhwc\": [\n          18,\n          32,\n          30\n        ],\n        \"source_sha256\": \"a19af88b4d94a2dcfd6b72bb8c8b480cbeb6d2c2f63030d0800932fea01936bd\"\n      }\n    }\n  },\n  \"warnings\": [\n    \"Descriptor build hashes refer to an older export. Current HWH base addresses and all register offsets were cross-checked before execution.\"\n  ],\n  \"boot_id\": \"aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3\",\n  \"dma_bytes\": 29945856,\n  \"dma_addresses\": {\n    \"input\": \"0x44a00000\",\n    \"weights\": \"0x44b00000\",\n    \"bias\": \"0x447c0000\",\n    \"accum\": \"0x45400000\",\n    \"0\": \"0x46200000\",\n    \"1\": \"0x46500000\",\n    \"2\": \"0x46600000\",\n    \"3\": \"0x44a80000\",\n    \"4\": \"0x46800000\",\n    \"5\": \"0x45380000\",\n    \"6\": \"0x46180000\",\n    \"7\": \"0x447e0000\",\n    \"8\": \"0x453c0000\",\n    \"9\": \"0x447d0000\",\n    \"10\": \"0x449e0000\",\n    \"11\": \"0x44ae0000\",\n    \"12\": \"0x46440000\",\n    \"13\": \"0x449d0000\",\n    \"14\": \"0x45360000\",\n    \"15\": \"0x447c4000\",\n    \"17\": \"0x44a70000\",\n    \"18\": \"0x447c8000\",\n    \"19\": \"0x461e0000\",\n    \"20\": \"0x46480000\",\n    \"21\": \"0x464c0000\",\n    \"22\": \"0x447f8000\"\n  },\n  \"initial_controls\": {\n    \"conv_engine_0\": \"0x4\",\n    \"maxpool_engine_0\": \"0x4\",\n    \"upsample_engine_0\": \"0x4\",\n    \"route_concat_engine_0\": \"0x4\"\n  },\n  \"wall_ms\": 3281.149,\n  \"accelerator_ms\": 1342.02,\n  \"finished_at\": \"2026-09-11T07:41:56Z\"\n}",
+    "boot_id":  "aff7dde6-ec8f-4c90-ba6a-53a6cb9fb6c3"
+}

@@ -1,0 +1,7 @@
+/.transfer/
+__pycache__/
+*.py[cod]
+.control-token
+.env
+.env.*
+!.env.example

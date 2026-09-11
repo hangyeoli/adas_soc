@@ -1,0 +1,16 @@
+[Unit]
+Description=KR260 ADAS verification dashboard
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/ubuntu/KR260_ADAS_SoC
+ExecStart=/usr/bin/python3 -u /home/ubuntu/KR260_ADAS_SoC/11_board_app/server.py
+Restart=on-failure
+RestartSec=3
+KillMode=process
+UMask=0022
+
+[Install]
+WantedBy=multi-user.target
