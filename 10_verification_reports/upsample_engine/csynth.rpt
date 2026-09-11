@@ -1,0 +1,280 @@
+
+
+================================================================
+== Synthesis Summary Report of 'upsample_engine'
+================================================================
++ General Information: 
+    * Date:           Tue Aug  4 14:40:18 2026
+    * Version:        2024.2 (Build 5238294 on Nov  8 2024)
+    * Project:        pool_upsample_route_prj
+    * Solution:       solution_upsample (Vivado IP Flow Target)
+    * Product family: zynquplus
+    * Target device:  xck26-sfvc784-2LV-c
+    
+
++ Performance & Resource Estimates: 
+    
+    PS: '+' for module; 'o' for loop; '*' for dataflow
+    +------------------------------------------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+--------+---------+-----------+-----------+-----+
+    |                                    Modules                                   | Issue|      | Latency |  Latency  | Iteration|         | Trip |          |        |         |           |           |     |
+    |                                    & Loops                                   | Type | Slack| (cycles)|    (ns)   |  Latency | Interval| Count| Pipelined|  BRAM  |   DSP   |     FF    |    LUT    | URAM|
+    +------------------------------------------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+--------+---------+-----------+-----------+-----+
+    |+ upsample_engine                                                             |     -|  0.00|   345442|  1.727e+06|         -|   345443|     -|        no|  5 (1%)|  6 (~0%)|  2512 (1%)|  2900 (2%)|    -|
+    | o ROW_LOOP                                                                   |     -|  3.65|   345440|  1.727e+06|     10795|        -|    32|        no|       -|        -|          -|          -|    -|
+    |  o COL_LOOP                                                                  |     -|  3.65|    10784|  5.392e+04|       337|        -|    32|        no|       -|        -|          -|          -|    -|
+    |   + upsample_engine_Pipeline_UPSAMPLE_READ                                   |     -|  0.00|       67|    335.000|         -|       67|     -|        no|       -|        -|   59 (~0%)|   84 (~0%)|    -|
+    |    o UPSAMPLE_READ                                                           |     -|  3.65|       65|    325.000|         3|        1|    64|       yes|       -|        -|          -|          -|    -|
+    |   + upsample_engine_Pipeline_VITIS_LOOP_65_1_VITIS_LOOP_66_2_UPSAMPLE_WRITE  |     -|  0.00|      264|  1.320e+03|         -|      264|     -|        no|       -|        -|  315 (~0%)|  586 (~0%)|    -|
+    |    o VITIS_LOOP_65_1_VITIS_LOOP_66_2_UPSAMPLE_WRITE                          |     -|  3.65|      262|  1.310e+03|         8|        1|   256|       yes|       -|        -|          -|          -|    -|
+    +------------------------------------------------------------------------------+------+------+---------+-----------+----------+---------+------+----------+--------+---------+-----------+-----------+-----+
+
+
+================================================================
+== HW Interfaces
+================================================================
+* M_AXI
++--------------+------------+------------+---------------+---------+--------+-------------------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| Interface    | Read/Write | Data Width | Address Width | Latency | Offset | Offset Interfaces | Register | Max Widen | Max Read     | Max Write    | Num Read    | Num Write   | Resource Estimate |
+|              |            | (SW->HW)   |               |         |        |                   |          | Bitwidth  | Burst Length | Burst Length | Outstanding | Outstanding |                   |
++--------------+------------+------------+---------------+---------+--------+-------------------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| m_axi_RD_BUS | READ_ONLY  | 32 -> 32   | 64            | 0       | slave  | s_axi_CTRL        | 0        | 0         | 16           | 16           | 16          | 16          | BRAM=2            |
+| m_axi_WR_BUS | WRITE_ONLY | 32 -> 32   | 64            | 0       | slave  | s_axi_CTRL        | 0        | 0         | 16           | 16           | 16          | 16          | BRAM=2            |
++--------------+------------+------------+---------------+---------+--------+-------------------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+
+* S_AXILITE Interfaces
++------------+------------+---------------+--------+----------+----------------+
+| Interface  | Data Width | Address Width | Offset | Register | Data Interface |
++------------+------------+---------------+--------+----------+----------------+
+| s_axi_CTRL | 32         | 6             | 16     | 0        | m_axi_WR_BUS   |
++------------+------------+---------------+--------+----------+----------------+
+
+* S_AXILITE Registers
++------------+----------+--------+-------+--------+----------------------------------+----------------------------------------------------------------------+
+| Interface  | Register | Offset | Width | Access | Description                      | Bit Fields                                                           |
++------------+----------+--------+-------+--------+----------------------------------+----------------------------------------------------------------------+
+| s_axi_CTRL | CTRL     | 0x00   | 32    | RW     | Control signals                  | 0=AP_START 1=AP_DONE 2=AP_IDLE 3=AP_READY 7=AUTO_RESTART 9=INTERRUPT |
+| s_axi_CTRL | GIER     | 0x04   | 32    | RW     | Global Interrupt Enable Register | 0=Enable                                                             |
+| s_axi_CTRL | IP_IER   | 0x08   | 32    | RW     | IP Interrupt Enable Register     | 0=CHAN0_INT_EN 1=CHAN1_INT_EN                                        |
+| s_axi_CTRL | IP_ISR   | 0x0c   | 32    | RW     | IP Interrupt Status Register     | 0=CHAN0_INT_ST 1=CHAN1_INT_ST                                        |
+| s_axi_CTRL | ifmap_1  | 0x10   | 32    | W      | Data signal of ifmap             |                                                                      |
+| s_axi_CTRL | ifmap_2  | 0x14   | 32    | W      | Data signal of ifmap             |                                                                      |
+| s_axi_CTRL | ofmap_1  | 0x1c   | 32    | W      | Data signal of ofmap             |                                                                      |
+| s_axi_CTRL | ofmap_2  | 0x20   | 32    | W      | Data signal of ofmap             |                                                                      |
+| s_axi_CTRL | img_h    | 0x28   | 32    | W      | Data signal of img_h             |                                                                      |
+| s_axi_CTRL | img_w    | 0x30   | 32    | W      | Data signal of img_w             |                                                                      |
+| s_axi_CTRL | ch       | 0x38   | 32    | W      | Data signal of ch                |                                                                      |
++------------+----------+--------+-------+--------+----------------------------------+----------------------------------------------------------------------+
+
+* TOP LEVEL CONTROL
++-----------+------------+-----------+
+| Interface | Type       | Ports     |
++-----------+------------+-----------+
+| ap_clk    | clock      | ap_clk    |
+| ap_rst_n  | reset      | ap_rst_n  |
+| interrupt | interrupt  | interrupt |
+| ap_ctrl   | ap_ctrl_hs |           |
++-----------+------------+-----------+
+
+
+================================================================
+== SW I/O Information
+================================================================
+* Top Function Arguments
++----------+-----------+---------------------+
+| Argument | Direction | Datatype            |
++----------+-----------+---------------------+
+| ifmap    | in        | ap_uint<32> const * |
+| ofmap    | out       | ap_uint<32>*        |
+| img_h    | in        | unsigned short      |
+| img_w    | in        | unsigned short      |
+| ch       | in        | unsigned short      |
++----------+-----------+---------------------+
+
+* SW-to-HW Mapping
++----------+--------------+-----------+----------+-----------------------------------+
+| Argument | HW Interface | HW Type   | HW Usage | HW Info                           |
++----------+--------------+-----------+----------+-----------------------------------+
+| ifmap    | m_axi_RD_BUS | interface |          | channel=0                         |
+| ifmap    | s_axi_CTRL   | register  | offset   | name=ifmap_1 offset=0x10 range=32 |
+| ifmap    | s_axi_CTRL   | register  | offset   | name=ifmap_2 offset=0x14 range=32 |
+| ofmap    | m_axi_WR_BUS | interface |          | channel=0                         |
+| ofmap    | s_axi_CTRL   | register  | offset   | name=ofmap_1 offset=0x1c range=32 |
+| ofmap    | s_axi_CTRL   | register  | offset   | name=ofmap_2 offset=0x20 range=32 |
+| img_h    | s_axi_CTRL   | register  |          | name=img_h offset=0x28 range=32   |
+| img_w    | s_axi_CTRL   | register  |          | name=img_w offset=0x30 range=32   |
+| ch       | s_axi_CTRL   | register  |          | name=ch offset=0x38 range=32      |
++----------+--------------+-----------+----------+-----------------------------------+
+
+
+================================================================
+== M_AXI Burst Information
+================================================================
+ Note: All burst requests might be further partitioned into multiple requests during RTL generation based on max_read_burst_length or max_write_burst_length settings.
+
+* Inferred Burst Summary
++--------------+-----------+----------+-------+----------------+------------------------------+
+| HW Interface | Direction | Length   | Width | Loop           | Loop Location                |
++--------------+-----------+----------+-------+----------------+------------------------------+
+| m_axi_RD_BUS | read      | variable | 32    |                |                              |
+| m_axi_WR_BUS | write     | variable | 32    | UPSAMPLE_WRITE | HW/upsample_engine.cpp:70:21 |
++--------------+-----------+----------+-------+----------------+------------------------------+
+
+* All M_AXI Variable Accesses
++--------------+----------+------------------------------+-----------+--------------+----------+-----------------+------------------------------+------------+-------------------------------------------------------------------------------------------------------+
+| HW Interface | Variable | Access Location              | Direction | Burst Status | Length   | Loop            | Loop Location                | Resolution | Problem                                                                                               |
++--------------+----------+------------------------------+-----------+--------------+----------+-----------------+------------------------------+------------+-------------------------------------------------------------------------------------------------------+
+| m_axi_RD_BUS | ifmap    | HW/upsample_engine.cpp:52:8  | read      | Widen Fail   |          | UPSAMPLE_READ   | HW/upsample_engine.cpp:49:13 | 214-353    | Could not widen since type i32 size is greater than or equal to the max_widen_bitwidth threshold of 0 |
+| m_axi_RD_BUS | ifmap    | HW/upsample_engine.cpp:52:8  | read      | Fail         |          | ROW_LOOP        | HW/upsample_engine.cpp:41:5  | 214-230    | Stride is incompatible                                                                                |
+| m_axi_RD_BUS | ifmap    | HW/upsample_engine.cpp:52:8  | read      | Inferred     | variable | COL_LOOP        | HW/upsample_engine.cpp:44:9  |            |                                                                                                       |
+| m_axi_WR_BUS | ofmap    | HW/upsample_engine.cpp:73:58 | write     | Widen Fail   |          | UPSAMPLE_WRITE  | HW/upsample_engine.cpp:70:21 | 214-353    | Could not widen since type i32 size is greater than or equal to the max_widen_bitwidth threshold of 0 |
+| m_axi_WR_BUS | ofmap    | HW/upsample_engine.cpp:73:58 | write     | Fail         |          | VITIS_LOOP_65_1 | HW/upsample_engine.cpp:65:30 | 214-230    | Stride is incompatible                                                                                |
+| m_axi_WR_BUS | ofmap    | HW/upsample_engine.cpp:73:58 | write     | Inferred     | variable | VITIS_LOOP_66_2 | HW/upsample_engine.cpp:66:34 |            |                                                                                                       |
++--------------+----------+------------------------------+-----------+--------------+----------+-----------------+------------------------------+------------+-------------------------------------------------------------------------------------------------------+
+
+    * Resolution URL: docs.xilinx.com/access/sources/dita/topic?Doc_Version=2024.2%20English&url=ug1448-hls-guidance&resourceid=XXX-YYY.html (replace XXX-YYY with column value)
+
+================================================================
+== Bind Op Report
+================================================================
++----------------------------------------------------------------------------+-----+--------+-------------------+--------+-----------+---------+
+| Name                                                                       | DSP | Pragma | Variable          | Op     | Impl      | Latency |
++----------------------------------------------------------------------------+-----+--------+-------------------+--------+-----------+---------+
+| + upsample_engine                                                          | 6   |        |                   |        |           |         |
+|   cmp58_fu_227_p2                                                          |     |        | cmp58             | setne  | auto      | 0       |
+|   cmp92_fu_232_p2                                                          |     |        | cmp92             | setne  | auto      | 0       |
+|   mul_14ns_16ns_30_1_1_U16                                                 | 1   |        | mul_ln41          | mul    | auto      | 0       |
+|   empty_fu_258_p3                                                          |     |        | empty             | select | auto_sel  | 0       |
+|   empty_27_fu_266_p3                                                       |     |        | empty_27          | select | auto_sel  | 0       |
+|   empty_28_fu_274_p3                                                       |     |        | empty_28          | select | auto_sel  | 0       |
+|   icmp_ln41_fu_296_p2                                                      |     |        | icmp_ln41         | seteq  | auto      | 0       |
+|   add_ln41_1_fu_301_p2                                                     |     |        | add_ln41_1        | add    | fabric    | 0       |
+|   mul_30s_16ns_30_1_1_U15                                                  | 2   |        | mul_ln41_1        | mul    | auto      | 0       |
+|   mul_16ns_30ns_32_1_1_U14                                                 | 2   |        | mul_ln41_2        | mul    | auto      | 0       |
+|   add_ln41_fu_323_p2                                                       |     |        | add_ln41          | add    | fabric    | 0       |
+|   icmp_ln44_fu_360_p2                                                      |     |        | icmp_ln44         | seteq  | auto      | 0       |
+|   c_1_fu_365_p2                                                            |     |        | c_1               | add    | fabric    | 0       |
+|   mac_muladd_16ns_15ns_32ns_32_4_1_U17                                     | 1   |        | mul_ln44          | mul    | dsp_slice | 3       |
+|   mac_muladd_16ns_15ns_32ns_32_4_1_U17                                     | 1   |        | zext_ln44_1       | zext   | dsp_slice | 3       |
+|   mac_muladd_16ns_15ns_32ns_32_4_1_U17                                     | 1   |        | add_ln44          | add    | dsp_slice | 3       |
+|  + upsample_engine_Pipeline_UPSAMPLE_READ                                  | 0   |        |                   |        |           |         |
+|    icmp_ln49_fu_106_p2                                                     |     |        | icmp_ln49         | seteq  | auto      | 0       |
+|    add_ln49_fu_112_p2                                                      |     |        | add_ln49          | add    | fabric    | 0       |
+|  + upsample_engine_Pipeline_VITIS_LOOP_65_1_VITIS_LOOP_66_2_UPSAMPLE_WRITE | 0   |        |                   |        |           |         |
+|    icmp_ln70_fu_246_p2                                                     |     |        | icmp_ln70         | seteq  | auto      | 0       |
+|    icmp_ln65_fu_251_p2                                                     |     |        | icmp_ln65         | seteq  | auto      | 0       |
+|    add_ln65_fu_256_p2                                                      |     |        | add_ln65          | add    | fabric    | 0       |
+|    icmp_ln66_fu_268_p2                                                     |     |        | icmp_ln66         | seteq  | auto      | 0       |
+|    select_ln65_fu_273_p3                                                   |     |        | select_ln65       | select | auto_sel  | 0       |
+|    add_ln65_3_fu_281_p2                                                    |     |        | add_ln65_3        | add    | fabric    | 0       |
+|    select_ln65_1_fu_287_p3                                                 |     |        | select_ln65_1     | select | auto_sel  | 0       |
+|    select_ln65_3_fu_299_p3                                                 |     |        | select_ln65_3     | select | auto_sel  | 0       |
+|    and_ln65_fu_307_p2                                                      |     |        | and_ln65          | and    | auto      | 0       |
+|    add_ln65_1_fu_324_p2                                                    |     |        | add_ln65_1        | add    | fabric    | 0       |
+|    add_ln65_2_fu_341_p2                                                    |     |        | add_ln65_2        | add    | fabric    | 0       |
+|    first_iter_145_fu_356_p2                                                |     |        | first_iter_145    | seteq  | auto      | 0       |
+|    or_ln65_fu_362_p2                                                       |     |        | or_ln65           | or     | auto      | 0       |
+|    icmp_ln70_1_fu_368_p2                                                   |     |        | icmp_ln70_1       | seteq  | auto      | 0       |
+|    select_ln65_2_fu_373_p3                                                 |     |        | select_ln65_2     | select | auto_sel  | 0       |
+|    dx_2_fu_381_p2                                                          |     |        | dx_2              | add    | fabric    | 0       |
+|    empty_26_fu_387_p2                                                      |     |        | empty_26          | or     | auto      | 0       |
+|    w_1_mid2_fu_393_p3                                                      |     |        | w_1_mid2          | select | auto_sel  | 0       |
+|    first_iter_1_mid1_fu_401_p2                                             |     |        | first_iter_1_mid1 | seteq  | auto      | 0       |
+|    first_iter_1_mid2_fu_407_p3                                             |     |        | first_iter_1_mid2 | select | auto_sel  | 0       |
+|    select_ln66_fu_415_p3                                                   |     |        | select_ln66       | select | auto_sel  | 0       |
+|    first_iter_0_fu_423_p2                                                  |     |        | first_iter_0      | seteq  | auto      | 0       |
+|    add_ln70_fu_434_p2                                                      |     |        | add_ln70          | add    | fabric    | 0       |
+|    icmp_ln70_2_fu_444_p2                                                   |     |        | icmp_ln70_2       | seteq  | auto      | 0       |
+|    icmp_ln66_1_fu_449_p2                                                   |     |        | icmp_ln66_1       | seteq  | auto      | 0       |
+|    add_ln66_1_fu_455_p2                                                    |     |        | add_ln66_1        | add    | fabric    | 0       |
+|    select_ln66_1_fu_461_p3                                                 |     |        | select_ln66_1     | select | auto_sel  | 0       |
++----------------------------------------------------------------------------+-----+--------+-------------------+--------+-----------+---------+
+
+
+================================================================
+== Storage Report
+================================================================
++-------------------+--------------+-----------+------+------+--------+----------+------+---------+------------------+
+| Name              | Usage        | Type      | BRAM | URAM | Pragma | Variable | Impl | Latency | Bitwidth, Depth, |
+|                   |              |           |      |      |        |          |      |         | Banks            |
++-------------------+--------------+-----------+------+------+--------+----------+------+---------+------------------+
+| + upsample_engine |              |           | 5    | 0    |        |          |      |         |                  |
+|   CTRL_s_axi_U    | interface    | s_axilite |      |      |        |          |      |         |                  |
+|   RD_BUS_m_axi_U  | interface    | m_axi     | 2    |      |        |          |      |         |                  |
+|   WR_BUS_m_axi_U  | interface    | m_axi     | 2    |      |        |          |      |         |                  |
+|   px_U            | ram_1p array |           | 2    |      |        | px       | auto | 1       | 32, 64, 1        |
++-------------------+--------------+-----------+------+------+--------+----------+------+---------+------------------+
+
+
+================================================================
+== Pragma Report
+================================================================
+* Valid Pragma Syntax
++----------------+---------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+| Type           | Options                                                                                                             | Location                                                                      |
++----------------+---------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+| interface      | m_axi port=ifmap offset=slave bundle=RD_BUS depth=MAX_IMG_W*MAX_IMG_W*MAX_CH_WORDS                                  | HW/maxpool_engine.cpp:14 in maxpool_engine, ifmap                             |
+| interface      | m_axi port=ofmap offset=slave bundle=WR_BUS depth=MAX_IMG_W*MAX_IMG_W*MAX_CH_WORDS                                  | HW/maxpool_engine.cpp:15 in maxpool_engine, ofmap                             |
+| interface      | s_axilite port=ifmap bundle=CTRL                                                                                    | HW/maxpool_engine.cpp:17 in maxpool_engine, ifmap                             |
+| interface      | s_axilite port=ofmap bundle=CTRL                                                                                    | HW/maxpool_engine.cpp:18 in maxpool_engine, ofmap                             |
+| interface      | s_axilite port=img_h bundle=CTRL                                                                                    | HW/maxpool_engine.cpp:19 in maxpool_engine, img_h                             |
+| interface      | s_axilite port=img_w bundle=CTRL                                                                                    | HW/maxpool_engine.cpp:20 in maxpool_engine, img_w                             |
+| interface      | s_axilite port=ch bundle=CTRL                                                                                       | HW/maxpool_engine.cpp:21 in maxpool_engine, ch                                |
+| interface      | s_axilite port=stride bundle=CTRL                                                                                   | HW/maxpool_engine.cpp:22 in maxpool_engine, stride                            |
+| interface      | s_axilite port=pad_right bundle=CTRL                                                                                | HW/maxpool_engine.cpp:23 in maxpool_engine, pad_right                         |
+| interface      | s_axilite port=pad_bottom bundle=CTRL                                                                               | HW/maxpool_engine.cpp:24 in maxpool_engine, pad_bottom                        |
+| interface      | s_axilite port=return bundle=CTRL                                                                                   | HW/maxpool_engine.cpp:25 in maxpool_engine, return                            |
+| loop_tripcount | min=1 max=MAX_IMG_W                                                                                                 | HW/maxpool_engine.cpp:67 in maxpool_engine                                    |
+| loop_tripcount | min=1 max=MAX_IMG_W                                                                                                 | HW/maxpool_engine.cpp:70 in maxpool_engine                                    |
+| pipeline       | II=1                                                                                                                | HW/maxpool_engine.cpp:82 in maxpool_engine                                    |
+| loop_tripcount | min=1 max=MAX_CH_WORDS                                                                                              | HW/maxpool_engine.cpp:83 in maxpool_engine                                    |
+| pipeline       | II=1                                                                                                                | HW/maxpool_engine.cpp:102 in maxpool_engine                                   |
+| loop_tripcount | min=1 max=MAX_CH_WORDS                                                                                              | HW/maxpool_engine.cpp:103 in maxpool_engine                                   |
+| unroll         |                                                                                                                     | HW/maxpool_engine.cpp:116 in maxpool_engine                                   |
+| pipeline       | II=1                                                                                                                | HW/maxpool_engine.cpp:142 in maxpool_engine                                   |
+| loop_tripcount | min=1 max=MAX_CH_WORDS                                                                                              | HW/maxpool_engine.cpp:143 in maxpool_engine                                   |
+| inline         |                                                                                                                     | HW/pack4.h:79 in pack4_get                                                    |
+| inline         |                                                                                                                     | HW/pack4.h:86 in pack4_set                                                    |
+| inline         |                                                                                                                     | HW/route_concat_engine.cpp:26 in round_shift                                  |
+| inline         |                                                                                                                     | HW/route_concat_engine.cpp:56 in apply_source_requant                         |
+| interface      | m_axi port=src0 offset=slave bundle=RD_BUS depth=MAX_ROUTE_W*MAX_ROUTE_W*MAX_ROUTE_SRC_CH_WORDS                     | HW/route_concat_engine.cpp:80 in route_concat_engine, src0                    |
+| interface      | m_axi port=src1 offset=slave bundle=RD_BUS depth=MAX_ROUTE_W*MAX_ROUTE_W*MAX_ROUTE_SRC_CH_WORDS                     | HW/route_concat_engine.cpp:81 in route_concat_engine, src1                    |
+| interface      | m_axi port=ofmap offset=slave bundle=WR_BUS depth=MAX_ROUTE_W*MAX_ROUTE_W*MAX_ROUTE_TOTAL_CH_WORDS                  | HW/route_concat_engine.cpp:82 in route_concat_engine, ofmap                   |
+| interface      | s_axilite port=src0 bundle=CTRL                                                                                     | HW/route_concat_engine.cpp:84 in route_concat_engine, src0                    |
+| interface      | s_axilite port=src1 bundle=CTRL                                                                                     | HW/route_concat_engine.cpp:85 in route_concat_engine, src1                    |
+| interface      | s_axilite port=ofmap bundle=CTRL                                                                                    | HW/route_concat_engine.cpp:86 in route_concat_engine, ofmap                   |
+| interface      | s_axilite port=img_h bundle=CTRL                                                                                    | HW/route_concat_engine.cpp:87 in route_concat_engine, img_h                   |
+| interface      | s_axilite port=img_w bundle=CTRL                                                                                    | HW/route_concat_engine.cpp:88 in route_concat_engine, img_w                   |
+| interface      | s_axilite port=ch0 bundle=CTRL                                                                                      | HW/route_concat_engine.cpp:89 in route_concat_engine, ch0                     |
+| interface      | s_axilite port=ch1 bundle=CTRL                                                                                      | HW/route_concat_engine.cpp:90 in route_concat_engine, ch1                     |
+| interface      | s_axilite port=src0_requant_enable bundle=CTRL                                                                      | HW/route_concat_engine.cpp:91 in route_concat_engine, src0_requant_enable     |
+| interface      | s_axilite port=src0_requant_multiplier bundle=CTRL                                                                  | HW/route_concat_engine.cpp:92 in route_concat_engine, src0_requant_multiplier |
+| interface      | s_axilite port=src0_requant_shift bundle=CTRL                                                                       | HW/route_concat_engine.cpp:93 in route_concat_engine, src0_requant_shift      |
+| interface      | s_axilite port=src1_requant_enable bundle=CTRL                                                                      | HW/route_concat_engine.cpp:94 in route_concat_engine, src1_requant_enable     |
+| interface      | s_axilite port=src1_requant_multiplier bundle=CTRL                                                                  | HW/route_concat_engine.cpp:95 in route_concat_engine, src1_requant_multiplier |
+| interface      | s_axilite port=src1_requant_shift bundle=CTRL                                                                       | HW/route_concat_engine.cpp:96 in route_concat_engine, src1_requant_shift      |
+| interface      | s_axilite port=return bundle=CTRL                                                                                   | HW/route_concat_engine.cpp:97 in route_concat_engine, return                  |
+| loop_tripcount | min=1 max=MAX_ROUTE_W                                                                                               | HW/route_concat_engine.cpp:134 in route_concat_engine                         |
+| loop_tripcount | min=1 max=MAX_ROUTE_W                                                                                               | HW/route_concat_engine.cpp:137 in route_concat_engine                         |
+| pipeline       | II=1                                                                                                                | HW/route_concat_engine.cpp:144 in route_concat_engine                         |
+| loop_tripcount | min=1 max=MAX_ROUTE_SRC_CH_WORDS                                                                                    | HW/route_concat_engine.cpp:145 in route_concat_engine                         |
+| unroll         |                                                                                                                     | HW/route_concat_engine.cpp:150 in route_concat_engine                         |
+| pipeline       | II=1                                                                                                                | HW/route_concat_engine.cpp:164 in route_concat_engine                         |
+| loop_tripcount | min=0 max=MAX_ROUTE_SRC_CH_WORDS                                                                                    | HW/route_concat_engine.cpp:165 in route_concat_engine                         |
+| unroll         |                                                                                                                     | HW/route_concat_engine.cpp:170 in route_concat_engine                         |
+| interface      | m_axi port=ifmap offset=slave bundle=RD_BUS depth=MAX_UPSAMPLE_IN_W*MAX_UPSAMPLE_IN_W*MAX_UPSAMPLE_CH_WORDS         | HW/upsample_engine.cpp:11 in upsample_engine, ifmap                           |
+| interface      | m_axi port=ofmap offset=slave bundle=WR_BUS depth=(2*MAX_UPSAMPLE_IN_W)*(2*MAX_UPSAMPLE_IN_W)*MAX_UPSAMPLE_CH_WORDS | HW/upsample_engine.cpp:12 in upsample_engine, ofmap                           |
+| interface      | s_axilite port=ifmap bundle=CTRL                                                                                    | HW/upsample_engine.cpp:14 in upsample_engine, ifmap                           |
+| interface      | s_axilite port=ofmap bundle=CTRL                                                                                    | HW/upsample_engine.cpp:15 in upsample_engine, ofmap                           |
+| interface      | s_axilite port=img_h bundle=CTRL                                                                                    | HW/upsample_engine.cpp:16 in upsample_engine, img_h                           |
+| interface      | s_axilite port=img_w bundle=CTRL                                                                                    | HW/upsample_engine.cpp:17 in upsample_engine, img_w                           |
+| interface      | s_axilite port=ch bundle=CTRL                                                                                       | HW/upsample_engine.cpp:18 in upsample_engine, ch                              |
+| interface      | s_axilite port=return bundle=CTRL                                                                                   | HW/upsample_engine.cpp:19 in upsample_engine, return                          |
+| loop_tripcount | min=1 max=MAX_UPSAMPLE_IN_W                                                                                         | HW/upsample_engine.cpp:42 in upsample_engine                                  |
+| loop_tripcount | min=1 max=MAX_UPSAMPLE_IN_W                                                                                         | HW/upsample_engine.cpp:45 in upsample_engine                                  |
+| pipeline       | II=1                                                                                                                | HW/upsample_engine.cpp:50 in upsample_engine                                  |
+| loop_tripcount | min=1 max=MAX_UPSAMPLE_CH_WORDS                                                                                     | HW/upsample_engine.cpp:51 in upsample_engine                                  |
+| pipeline       | II=1                                                                                                                | HW/upsample_engine.cpp:71 in upsample_engine                                  |
+| loop_tripcount | min=1 max=MAX_UPSAMPLE_CH_WORDS                                                                                     | HW/upsample_engine.cpp:72 in upsample_engine                                  |
++----------------+---------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------+
+
+

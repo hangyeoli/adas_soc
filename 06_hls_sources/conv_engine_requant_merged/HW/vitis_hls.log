@@ -1,0 +1,5 @@
+/mnt/c/Xilinx/Vitis_HLS/2021.1/bin/rdiArgs.sh: line 31: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8): No such file or directory
+WARNING: /mnt/c/Xilinx/Vitis_HLS/2021.1/tps/lnx64/jre11.0.2 does not exist.
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+ERROR: Could not find 64-bit executable.
+ERROR: /mnt/c/Xilinx/Vitis_HLS/2021.1/bin/unwrapped/lnx64.o/vitis_hls does not exist

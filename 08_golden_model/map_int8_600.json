@@ -1,0 +1,55 @@
+{
+  "iou_threshold": 0.5,
+  "mAP": 0.7493569258663559,
+  "per_class": [
+    {
+      "id": 0,
+      "name": "car",
+      "ground_truth": 1622,
+      "predictions": 8654,
+      "precision": 0.17390801941298822,
+      "recall": 0.9278668310727497,
+      "ap": 0.7993599822527258
+    },
+    {
+      "id": 1,
+      "name": "person",
+      "ground_truth": 97,
+      "predictions": 5711,
+      "precision": 0.014358255997198388,
+      "recall": 0.845360824742268,
+      "ap": 0.28991349880703626
+    },
+    {
+      "id": 2,
+      "name": "sign_warning",
+      "ground_truth": 3,
+      "predictions": 1090,
+      "precision": 0.0027522935779816515,
+      "recall": 1.0,
+      "ap": 0.9166666666666666
+    },
+    {
+      "id": 3,
+      "name": "sign_prohibition",
+      "ground_truth": 6,
+      "predictions": 1970,
+      "precision": 0.003045685279187817,
+      "recall": 1.0,
+      "ap": 0.7408444816053512
+    },
+    {
+      "id": 4,
+      "name": "sign_mandatory",
+      "ground_truth": 2,
+      "predictions": 1432,
+      "precision": 0.0013966480446927375,
+      "recall": 1.0,
+      "ap": 1.0
+    }
+  ],
+  "backend": "int8",
+  "images": 600,
+  "confidence_threshold": 0.005,
+  "nms_threshold": 0.45
+}

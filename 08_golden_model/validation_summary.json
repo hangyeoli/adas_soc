@@ -1,0 +1,33 @@
+{
+  "model": "yolov3-tiny-adas-5class-balanced-512x288_best.weights",
+  "calibration": {
+    "images": 100,
+    "percentile": 99.99,
+    "activation_bits": 8,
+    "weight_bits": 8
+  },
+  "sample_cross_check": {
+    "image": "bdd_014f813e-f026867d.jpg",
+    "darknet_cpu_detections_at_0.25": 3,
+    "python_fp32_detections_at_0.25": 3,
+    "darknet_scores_rounded": [0.61, 0.39, 0.35],
+    "python_scores": [0.614648, 0.388327, 0.346608],
+    "note": "Darknet printed pixel boxes and Python normalized boxes agree after scaling to 1280x720."
+  },
+  "sample_head_similarity": {
+    "head_9x16_cosine": 0.998490,
+    "head_18x32_cosine": 0.997649,
+    "head_saturation_percent": 0.0
+  },
+  "validation_600_images": {
+    "metric": "mAP@IoU0.5, continuous PR integration, confidence 0.005, NMS 0.45",
+    "fp32": 0.7655022061343428,
+    "int8": 0.7493569258663559,
+    "absolute_drop": 0.0161452802679869,
+    "percentage_point_drop": 1.61452802679869
+  },
+  "tests": {
+    "passed": 6,
+    "failed": 0
+  }
+}

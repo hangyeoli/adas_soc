@@ -1,0 +1,1138 @@
+{
+  "schema_version": "1.0.0",
+  "generated_from": {
+    "op_chain": "hls/conv_engine_requant/SW/network_run_full.c",
+    "conv_config": "hls/conv_engine_requant/SW/network_layers.h",
+    "pool_upsample_route_config": "hls/pool_upsample_route/python/real_pool_upsample_route_layers.py",
+    "model_manifest": "python_teammate/darknet_golden/artifacts/int8/model_manifest.json"
+  },
+  "source_sha256": {
+    "hls/conv_engine_requant/SW/network_run_full.c": "d0cac568fc554400c958103a8fd46530791519b69deec576459838b2261c7bee",
+    "hls/conv_engine_requant/SW/network_layers.h": "2aa4625229c1bd9ad644040ddf94f8e760188e0148ddbd7a43a79208af1ff7cf",
+    "hls/pool_upsample_route/python/real_pool_upsample_route_layers.py": "4f26fb0bff757d61421384d0ec8514f3f6b9f1633b11c1bf798ba301f626a2bc",
+    "python_teammate/darknet_golden/artifacts/int8/model_manifest.json": "f03761440918a017a9acee5f69e2ff49d8bdef54cbd42fd996b50702980a0d96"
+  },
+  "bitstream": {
+    "xsa_sha256": "9ea27e097fb778cb34bf1b7ea2805adf5ca04fd58e75c5a8df8f5f35b141aeff",
+    "bit_sha256": "871babf85f73f748d74e38d8ca5dd735c3661d7936f55cb1b1e5edf2852427d5",
+    "implementation_date": "2026-07-30"
+  },
+  "conventions": {
+    "layout": "NHWC, channel innermost, row-major",
+    "activation_dtype": "signed int8",
+    "bias_dtype": "signed int32",
+    "weight_layout": "OIHW",
+    "all_offsets": "bytes",
+    "note": "network_layers.h stores bias_offset in int32 elements; this descriptor converts it to bytes."
+  },
+  "engines": {
+    "conv_engine_0": {
+      "base": "0xA0000000",
+      "range_bytes": 65536
+    },
+    "maxpool_engine_0": {
+      "base": "0xA0010000",
+      "range_bytes": 65536
+    },
+    "upsample_engine_0": {
+      "base": "0xA0020000",
+      "range_bytes": 65536
+    },
+    "route_concat_engine_0": {
+      "base": "0xA0030000",
+      "range_bytes": 65536
+    }
+  },
+  "memory": {
+    "layer0_input_bytes": 447180,
+    "layer0_input_note": "290x514x3 pre-padded frame; border 1px = -128. PS builds this per frame - see doc/reply_to_request_2026-08-04.md 2.3",
+    "weights_total_bytes": 8672688,
+    "bias_total_bytes": 12976,
+    "accum_scratch_elems": 3538944,
+    "accum_scratch_bytes": 14155776,
+    "accum_note": "single scratch buffer shared by all convs; PE_OC=24",
+    "feature_buffers_total_bytes_no_reuse": 6638688,
+    "total_bytes_no_reuse": 29927308
+  },
+  "buffers": [
+    {
+      "buffer": 0,
+      "produced_by_op": 0,
+      "manifest_index": 0,
+      "h": 288,
+      "w": 512,
+      "c": 16,
+      "bytes": 2359296,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        1
+      ],
+      "free_after_op": 1,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 1,
+      "produced_by_op": 1,
+      "manifest_index": 1,
+      "h": 144,
+      "w": 256,
+      "c": 16,
+      "bytes": 589824,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        2
+      ],
+      "free_after_op": 2,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 2,
+      "produced_by_op": 2,
+      "manifest_index": 2,
+      "h": 144,
+      "w": 256,
+      "c": 32,
+      "bytes": 1179648,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        3
+      ],
+      "free_after_op": 3,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 3,
+      "produced_by_op": 3,
+      "manifest_index": 3,
+      "h": 72,
+      "w": 128,
+      "c": 32,
+      "bytes": 294912,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        4
+      ],
+      "free_after_op": 4,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 4,
+      "produced_by_op": 4,
+      "manifest_index": 4,
+      "h": 72,
+      "w": 128,
+      "c": 64,
+      "bytes": 589824,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        5
+      ],
+      "free_after_op": 5,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 5,
+      "produced_by_op": 5,
+      "manifest_index": 5,
+      "h": 36,
+      "w": 64,
+      "c": 64,
+      "bytes": 147456,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        6
+      ],
+      "free_after_op": 6,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 6,
+      "produced_by_op": 6,
+      "manifest_index": 6,
+      "h": 36,
+      "w": 64,
+      "c": 128,
+      "bytes": 294912,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        7
+      ],
+      "free_after_op": 7,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 7,
+      "produced_by_op": 7,
+      "manifest_index": 7,
+      "h": 18,
+      "w": 32,
+      "c": 128,
+      "bytes": 73728,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        8
+      ],
+      "free_after_op": 8,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 8,
+      "produced_by_op": 8,
+      "manifest_index": 8,
+      "h": 18,
+      "w": 32,
+      "c": 256,
+      "bytes": 147456,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        9,
+        19
+      ],
+      "free_after_op": 19,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 9,
+      "produced_by_op": 9,
+      "manifest_index": 9,
+      "h": 9,
+      "w": 16,
+      "c": 256,
+      "bytes": 36864,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        10
+      ],
+      "free_after_op": 10,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 10,
+      "produced_by_op": 10,
+      "manifest_index": 10,
+      "h": 9,
+      "w": 16,
+      "c": 512,
+      "bytes": 73728,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        11
+      ],
+      "free_after_op": 11,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 11,
+      "produced_by_op": 11,
+      "manifest_index": 11,
+      "h": 9,
+      "w": 16,
+      "c": 512,
+      "bytes": 73728,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        12
+      ],
+      "free_after_op": 12,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 12,
+      "produced_by_op": 12,
+      "manifest_index": 12,
+      "h": 9,
+      "w": 16,
+      "c": 1024,
+      "bytes": 147456,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        13
+      ],
+      "free_after_op": 13,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 13,
+      "produced_by_op": 13,
+      "manifest_index": 13,
+      "h": 9,
+      "w": 16,
+      "c": 256,
+      "bytes": 36864,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        14,
+        16
+      ],
+      "free_after_op": 16,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 14,
+      "produced_by_op": 14,
+      "manifest_index": 14,
+      "h": 9,
+      "w": 16,
+      "c": 512,
+      "bytes": 73728,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        15
+      ],
+      "free_after_op": 15,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 15,
+      "produced_by_op": 15,
+      "manifest_index": 15,
+      "h": 9,
+      "w": 16,
+      "c": 30,
+      "bytes": 4320,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [],
+      "free_after_op": null,
+      "is_detection_head": true
+    },
+    {
+      "buffer": 17,
+      "produced_by_op": 16,
+      "manifest_index": 17,
+      "h": 9,
+      "w": 16,
+      "c": 256,
+      "bytes": 36864,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        17
+      ],
+      "free_after_op": 17,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 18,
+      "produced_by_op": 17,
+      "manifest_index": 18,
+      "h": 9,
+      "w": 16,
+      "c": 128,
+      "bytes": 18432,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        18
+      ],
+      "free_after_op": 18,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 19,
+      "produced_by_op": 18,
+      "manifest_index": 19,
+      "h": 18,
+      "w": 32,
+      "c": 128,
+      "bytes": 73728,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        19
+      ],
+      "free_after_op": 19,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 20,
+      "produced_by_op": 19,
+      "manifest_index": 20,
+      "h": 18,
+      "w": 32,
+      "c": 384,
+      "bytes": 221184,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        20
+      ],
+      "free_after_op": 20,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 21,
+      "produced_by_op": 20,
+      "manifest_index": 21,
+      "h": 18,
+      "w": 32,
+      "c": 256,
+      "bytes": 147456,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [
+        21
+      ],
+      "free_after_op": 21,
+      "is_detection_head": false
+    },
+    {
+      "buffer": 22,
+      "produced_by_op": 21,
+      "manifest_index": 22,
+      "h": 18,
+      "w": 32,
+      "c": 30,
+      "bytes": 17280,
+      "dtype": "int8",
+      "signedness": "signed",
+      "layout": "NHWC",
+      "alignment_required_bytes": 4,
+      "alignment_recommended_bytes": 4096,
+      "consumed_by_ops": [],
+      "free_after_op": null,
+      "is_detection_head": true
+    }
+  ],
+  "ops": [
+    {
+      "op": 0,
+      "kind": "conv",
+      "manifest_index": 0,
+      "engine": "conv_engine_0",
+      "conv_index": 0,
+      "input": {
+        "buffer": -1,
+        "h": 290,
+        "w": 514,
+        "c": 3
+      },
+      "output": {
+        "buffer": 0,
+        "h": 288,
+        "w": 512,
+        "c": 16,
+        "bytes": 2359296
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 0,
+      "weight_offset_bytes": 0,
+      "weight_size_bytes": 432,
+      "bias_offset_bytes": 0,
+      "bias_size_bytes": 64,
+      "requant_multiplier": 1264723901,
+      "requant_shift": 37,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3538944,
+      "accum_bytes": 14155776,
+      "output_scale": 0.0777523611474225
+    },
+    {
+      "op": 1,
+      "kind": "maxpool",
+      "manifest_index": 1,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 0,
+        "h": 288,
+        "w": 512,
+        "c": 16
+      },
+      "output": {
+        "buffer": 1,
+        "h": 144,
+        "w": 256,
+        "c": 16,
+        "bytes": 589824
+      },
+      "window": 2,
+      "stride": 2,
+      "pad_right": 0,
+      "pad_bottom": 0,
+      "output_scale": 0.0777523611474225
+    },
+    {
+      "op": 2,
+      "kind": "conv",
+      "manifest_index": 2,
+      "engine": "conv_engine_0",
+      "conv_index": 1,
+      "input": {
+        "buffer": 1,
+        "h": 144,
+        "w": 256,
+        "c": 16
+      },
+      "output": {
+        "buffer": 2,
+        "h": 144,
+        "w": 256,
+        "c": 32,
+        "bytes": 1179648
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 432,
+      "weight_size_bytes": 4608,
+      "bias_offset_bytes": 64,
+      "bias_size_bytes": 128,
+      "requant_multiplier": 1690762378,
+      "requant_shift": 37,
+      "leaky_relu_enable": 1,
+      "accum_elems": 884736,
+      "accum_bytes": 3538944,
+      "output_scale": 0.05076594991008128
+    },
+    {
+      "op": 3,
+      "kind": "maxpool",
+      "manifest_index": 3,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 2,
+        "h": 144,
+        "w": 256,
+        "c": 32
+      },
+      "output": {
+        "buffer": 3,
+        "h": 72,
+        "w": 128,
+        "c": 32,
+        "bytes": 294912
+      },
+      "window": 2,
+      "stride": 2,
+      "pad_right": 0,
+      "pad_bottom": 0,
+      "output_scale": 0.05076594991008128
+    },
+    {
+      "op": 4,
+      "kind": "conv",
+      "manifest_index": 4,
+      "engine": "conv_engine_0",
+      "conv_index": 2,
+      "input": {
+        "buffer": 3,
+        "h": 72,
+        "w": 128,
+        "c": 32
+      },
+      "output": {
+        "buffer": 4,
+        "h": 72,
+        "w": 128,
+        "c": 64,
+        "bytes": 589824
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 5040,
+      "weight_size_bytes": 18432,
+      "bias_offset_bytes": 192,
+      "bias_size_bytes": 256,
+      "requant_multiplier": 1490636759,
+      "requant_shift": 38,
+      "leaky_relu_enable": 1,
+      "accum_elems": 221184,
+      "accum_bytes": 884736,
+      "output_scale": 0.04079994441956047
+    },
+    {
+      "op": 5,
+      "kind": "maxpool",
+      "manifest_index": 5,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 4,
+        "h": 72,
+        "w": 128,
+        "c": 64
+      },
+      "output": {
+        "buffer": 5,
+        "h": 36,
+        "w": 64,
+        "c": 64,
+        "bytes": 147456
+      },
+      "window": 2,
+      "stride": 2,
+      "pad_right": 0,
+      "pad_bottom": 0,
+      "output_scale": 0.04079994441956047
+    },
+    {
+      "op": 6,
+      "kind": "conv",
+      "manifest_index": 6,
+      "engine": "conv_engine_0",
+      "conv_index": 3,
+      "input": {
+        "buffer": 5,
+        "h": 36,
+        "w": 64,
+        "c": 64
+      },
+      "output": {
+        "buffer": 6,
+        "h": 36,
+        "w": 64,
+        "c": 128,
+        "bytes": 294912
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 23472,
+      "weight_size_bytes": 73728,
+      "bias_offset_bytes": 448,
+      "bias_size_bytes": 512,
+      "requant_multiplier": 1585969364,
+      "requant_shift": 38,
+      "leaky_relu_enable": 1,
+      "accum_elems": 55296,
+      "accum_bytes": 221184,
+      "output_scale": 0.0359029206703967
+    },
+    {
+      "op": 7,
+      "kind": "maxpool",
+      "manifest_index": 7,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 6,
+        "h": 36,
+        "w": 64,
+        "c": 128
+      },
+      "output": {
+        "buffer": 7,
+        "h": 18,
+        "w": 32,
+        "c": 128,
+        "bytes": 73728
+      },
+      "window": 2,
+      "stride": 2,
+      "pad_right": 0,
+      "pad_bottom": 0,
+      "output_scale": 0.0359029206703967
+    },
+    {
+      "op": 8,
+      "kind": "conv",
+      "manifest_index": 8,
+      "engine": "conv_engine_0",
+      "conv_index": 4,
+      "input": {
+        "buffer": 7,
+        "h": 18,
+        "w": 32,
+        "c": 128
+      },
+      "output": {
+        "buffer": 8,
+        "h": 18,
+        "w": 32,
+        "c": 256,
+        "bytes": 147456
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 97200,
+      "weight_size_bytes": 294912,
+      "bias_offset_bytes": 960,
+      "bias_size_bytes": 1024,
+      "requant_multiplier": 1085497666,
+      "requant_shift": 39,
+      "leaky_relu_enable": 1,
+      "accum_elems": 13824,
+      "accum_bytes": 55296,
+      "output_scale": 0.03146162558728316
+    },
+    {
+      "op": 9,
+      "kind": "maxpool",
+      "manifest_index": 9,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 8,
+        "h": 18,
+        "w": 32,
+        "c": 256
+      },
+      "output": {
+        "buffer": 9,
+        "h": 9,
+        "w": 16,
+        "c": 256,
+        "bytes": 36864
+      },
+      "window": 2,
+      "stride": 2,
+      "pad_right": 0,
+      "pad_bottom": 0,
+      "output_scale": 0.03146162558728316
+    },
+    {
+      "op": 10,
+      "kind": "conv",
+      "manifest_index": 10,
+      "engine": "conv_engine_0",
+      "conv_index": 5,
+      "input": {
+        "buffer": 9,
+        "h": 9,
+        "w": 16,
+        "c": 256
+      },
+      "output": {
+        "buffer": 10,
+        "h": 9,
+        "w": 16,
+        "c": 512,
+        "bytes": 73728
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 392112,
+      "weight_size_bytes": 1179648,
+      "bias_offset_bytes": 1984,
+      "bias_size_bytes": 2048,
+      "requant_multiplier": 1597509700,
+      "requant_shift": 40,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.03132157626114492
+    },
+    {
+      "op": 11,
+      "kind": "maxpool",
+      "manifest_index": 11,
+      "engine": "maxpool_engine_0",
+      "input": {
+        "buffer": 10,
+        "h": 9,
+        "w": 16,
+        "c": 512
+      },
+      "output": {
+        "buffer": 11,
+        "h": 9,
+        "w": 16,
+        "c": 512,
+        "bytes": 73728
+      },
+      "window": 2,
+      "stride": 1,
+      "pad_right": 1,
+      "pad_bottom": 1,
+      "output_scale": 0.03132157626114492
+    },
+    {
+      "op": 12,
+      "kind": "conv",
+      "manifest_index": 12,
+      "engine": "conv_engine_0",
+      "conv_index": 6,
+      "input": {
+        "buffer": 11,
+        "h": 9,
+        "w": 16,
+        "c": 512
+      },
+      "output": {
+        "buffer": 12,
+        "h": 9,
+        "w": 16,
+        "c": 1024,
+        "bytes": 147456
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 1571760,
+      "weight_size_bytes": 4718592,
+      "bias_offset_bytes": 4032,
+      "bias_size_bytes": 4096,
+      "requant_multiplier": 1810489245,
+      "requant_shift": 42,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.03267670804121363
+    },
+    {
+      "op": 13,
+      "kind": "conv",
+      "manifest_index": 13,
+      "engine": "conv_engine_0",
+      "conv_index": 7,
+      "input": {
+        "buffer": 12,
+        "h": 9,
+        "w": 16,
+        "c": 1024
+      },
+      "output": {
+        "buffer": 13,
+        "h": 9,
+        "w": 16,
+        "c": 256,
+        "bytes": 36864
+      },
+      "kernel": 1,
+      "stride": 1,
+      "padding": 0,
+      "weight_offset_bytes": 6290352,
+      "weight_size_bytes": 262144,
+      "bias_offset_bytes": 8128,
+      "bias_size_bytes": 1024,
+      "requant_multiplier": 1429642394,
+      "requant_shift": 40,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.029731140361996148
+    },
+    {
+      "op": 14,
+      "kind": "conv",
+      "manifest_index": 14,
+      "engine": "conv_engine_0",
+      "conv_index": 8,
+      "input": {
+        "buffer": 13,
+        "h": 9,
+        "w": 16,
+        "c": 256
+      },
+      "output": {
+        "buffer": 14,
+        "h": 9,
+        "w": 16,
+        "c": 512,
+        "bytes": 73728
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 6552496,
+      "weight_size_bytes": 1179648,
+      "bias_offset_bytes": 9152,
+      "bias_size_bytes": 2048,
+      "requant_multiplier": 1254521939,
+      "requant_shift": 40,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.029912618201548658
+    },
+    {
+      "op": 15,
+      "kind": "conv",
+      "manifest_index": 15,
+      "engine": "conv_engine_0",
+      "conv_index": 9,
+      "input": {
+        "buffer": 14,
+        "h": 9,
+        "w": 16,
+        "c": 512
+      },
+      "output": {
+        "buffer": 15,
+        "h": 9,
+        "w": 16,
+        "c": 30,
+        "bytes": 4320
+      },
+      "kernel": 1,
+      "stride": 1,
+      "padding": 0,
+      "weight_offset_bytes": 7732144,
+      "weight_size_bytes": 15360,
+      "bias_offset_bytes": 11200,
+      "bias_size_bytes": 120,
+      "requant_multiplier": 1576269802,
+      "requant_shift": 42,
+      "leaky_relu_enable": 0,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.21446585467481238
+    },
+    {
+      "op": 16,
+      "kind": "route",
+      "manifest_index": 17,
+      "engine": "route_concat_engine_0",
+      "src0": {
+        "buffer": 13,
+        "h": 9,
+        "w": 16,
+        "c": 256,
+        "requant": {
+          "enable": 0,
+          "multiplier": 0,
+          "shift": 0,
+          "source_layer": 13
+        }
+      },
+      "src1": null,
+      "output": {
+        "buffer": 17,
+        "h": 9,
+        "w": 16,
+        "c": 256,
+        "bytes": 36864
+      },
+      "concat_order": "src0 channels first, then src1",
+      "output_scale": 0.029731140361996148
+    },
+    {
+      "op": 17,
+      "kind": "conv",
+      "manifest_index": 18,
+      "engine": "conv_engine_0",
+      "conv_index": 10,
+      "input": {
+        "buffer": 17,
+        "h": 9,
+        "w": 16,
+        "c": 256
+      },
+      "output": {
+        "buffer": 18,
+        "h": 9,
+        "w": 16,
+        "c": 128,
+        "bytes": 18432
+      },
+      "kernel": 1,
+      "stride": 1,
+      "padding": 0,
+      "weight_offset_bytes": 7747504,
+      "weight_size_bytes": 32768,
+      "bias_offset_bytes": 11320,
+      "bias_size_bytes": 512,
+      "requant_multiplier": 1171363238,
+      "requant_shift": 39,
+      "leaky_relu_enable": 1,
+      "accum_elems": 3456,
+      "accum_bytes": 13824,
+      "output_scale": 0.029609501831174837
+    },
+    {
+      "op": 18,
+      "kind": "upsample",
+      "manifest_index": 19,
+      "engine": "upsample_engine_0",
+      "input": {
+        "buffer": 18,
+        "h": 9,
+        "w": 16,
+        "c": 128
+      },
+      "output": {
+        "buffer": 19,
+        "h": 18,
+        "w": 32,
+        "c": 128,
+        "bytes": 73728
+      },
+      "factor": 2,
+      "output_scale": 0.029609501831174837
+    },
+    {
+      "op": 19,
+      "kind": "route",
+      "manifest_index": 20,
+      "engine": "route_concat_engine_0",
+      "src0": {
+        "buffer": 19,
+        "h": 18,
+        "w": 32,
+        "c": 128,
+        "requant": {
+          "enable": 1,
+          "multiplier": 1981659643,
+          "shift": 31,
+          "source_layer": 19
+        }
+      },
+      "src1": {
+        "buffer": 8,
+        "h": 18,
+        "w": 32,
+        "c": 256,
+        "requant": {
+          "enable": 1,
+          "multiplier": 2105615761,
+          "shift": 31,
+          "source_layer": 8
+        }
+      },
+      "output": {
+        "buffer": 20,
+        "h": 18,
+        "w": 32,
+        "c": 384,
+        "bytes": 221184
+      },
+      "concat_order": "src0 channels first, then src1",
+      "output_scale": 0.03208720590185931
+    },
+    {
+      "op": 20,
+      "kind": "conv",
+      "manifest_index": 21,
+      "engine": "conv_engine_0",
+      "conv_index": 11,
+      "input": {
+        "buffer": 20,
+        "h": 18,
+        "w": 32,
+        "c": 384
+      },
+      "output": {
+        "buffer": 21,
+        "h": 18,
+        "w": 32,
+        "c": 256,
+        "bytes": 147456
+      },
+      "kernel": 3,
+      "stride": 1,
+      "padding": 1,
+      "weight_offset_bytes": 7780272,
+      "weight_size_bytes": 884736,
+      "bias_offset_bytes": 11832,
+      "bias_size_bytes": 1024,
+      "requant_multiplier": 1468269848,
+      "requant_shift": 40,
+      "leaky_relu_enable": 1,
+      "accum_elems": 13824,
+      "accum_bytes": 55296,
+      "output_scale": 0.02981260630089467
+    },
+    {
+      "op": 21,
+      "kind": "conv",
+      "manifest_index": 22,
+      "engine": "conv_engine_0",
+      "conv_index": 12,
+      "input": {
+        "buffer": 21,
+        "h": 18,
+        "w": 32,
+        "c": 256
+      },
+      "output": {
+        "buffer": 22,
+        "h": 18,
+        "w": 32,
+        "c": 30,
+        "bytes": 17280
+      },
+      "kernel": 1,
+      "stride": 1,
+      "padding": 0,
+      "weight_offset_bytes": 8665008,
+      "weight_size_bytes": 7680,
+      "bias_offset_bytes": 12856,
+      "bias_size_bytes": 120,
+      "requant_multiplier": 1764908694,
+      "requant_shift": 41,
+      "leaky_relu_enable": 0,
+      "accum_elems": 13824,
+      "accum_bytes": 55296,
+      "output_scale": 0.2062814967838798
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch CLANG as the compiler.
+   Compiling ../../../../HW/pool_upsample_route_tb.cpp in debug mode
+   Compiling ../../../../HW/route_concat_engine.cpp in debug mode
+   Compiling ../../../../HW/upsample_engine.cpp in debug mode
+   Compiling ../../../../HW/maxpool_engine.cpp in debug mode
+   Generating csim.exe
+[MP-A: stride2 basic] PASS: 512 output values matched the reference bit-exactly (img 16x16x8 -> 8x8x8, stride=2, pad_right=0, pad_bottom=0)
+[MP-B: stride2 minimal (2x2x4->1x1x4)] PASS: 4 output values matched the reference bit-exactly (img 2x2x4 -> 1x1x4, stride=2, pad_right=0, pad_bottom=0)
+[MP-C: stride2 odd-dim (boundary only, not a real case)] PASS: 24 output values matched the reference bit-exactly (img 7x5x4 -> 3x2x4, stride=2, pad_right=0, pad_bottom=0)
+[MP-D: stride1+pad, layer-11-shaped (9x16x512)] PASS: 73728 output values matched the reference bit-exactly (img 16x9x512 -> 16x9x512, stride=1, pad_right=1, pad_bottom=1)
+[MP-E: stride1+pad, small synthetic shape] PASS: 140 output values matched the reference bit-exactly (img 7x5x4 -> 7x5x4, stride=1, pad_right=1, pad_bottom=1)
+[MP-F: ch == MAX_CH exact] PASS: 2048 output values matched the reference bit-exactly (img 4x4x512 -> 2x2x512, stride=2, pad_right=0, pad_bottom=0)
+[MP-G: non-square, stride2] PASS: 192 output values matched the reference bit-exactly (img 12x8x8 -> 6x4x8, stride=2, pad_right=0, pad_bottom=0)
+[MP-H: pad-value-dominance (border values near -128)] PASS: 576 output values matched the reference bit-exactly (img 16x9x4 -> 16x9x4, stride=1, pad_right=1, pad_bottom=1)
+[UP-A: basic] PASS: 512 output values matched the reference bit-exactly (img 4x4x8 -> 8x8x8)
+[UP-B: layer-19-shaped (9x16x128->18x32x128)] PASS: 73728 output values matched the reference bit-exactly (img 16x9x128 -> 32x18x128)
+[UP-C: minimal (1x1x4->2x2x4)] PASS: 16 output values matched the reference bit-exactly (img 1x1x4 -> 2x2x4)
+[UP-D: non-square] PASS: 1440 output values matched the reference bit-exactly (img 9x5x8 -> 18x10x8)
+[UP-E: ch == MAX_UPSAMPLE_CH exact] PASS: 9216 output values matched the reference bit-exactly (img 3x3x256 -> 6x6x256)
+[RT-A: passthrough, layer-17-shaped] PASS: 36864 output values matched the reference bit-exactly (img 16x9, ch0=256, ch1=0 -> ch=256)
+[RT-B: passthrough, small synthetic] PASS: 560 output values matched the reference bit-exactly (img 7x5, ch0=16, ch1=0 -> ch=16)
+[RT-C: 2-source concat, layer-20-shaped, real mult/shift] PASS: 221184 output values matched the reference bit-exactly (img 32x18, ch0=128, ch1=256 -> ch=384)
+[RT-D: 2-source concat, small synthetic mult/shift] PASS: 400 output values matched the reference bit-exactly (img 5x4, ch0=12, ch1=8 -> ch=20)
+[RT-E: mixed passthrough+requantize] PASS: 108 output values matched the reference bit-exactly (img 3x3, ch0=8, ch1=4 -> ch=12)
+[RT-F: ch0+ch1 == MAX_ROUTE_TOTAL_CH exact] PASS: 2048 output values matched the reference bit-exactly (img 2x2, ch0=256, ch1=256 -> ch=512)
+[RT-G: saturation stress] PASS: 72 output values matched the reference bit-exactly (img 3x3, ch0=4, ch1=4 -> ch=8)
+[real-maxpool00 (manifest idx 1)] PASS: 589824 output values matched the real golden model bit-exactly
+[real-maxpool01 (manifest idx 3)] PASS: 294912 output values matched the real golden model bit-exactly
+[real-maxpool02 (manifest idx 5)] PASS: 147456 output values matched the real golden model bit-exactly
+[real-maxpool03 (manifest idx 7)] PASS: 73728 output values matched the real golden model bit-exactly
+[real-maxpool04 (manifest idx 9)] PASS: 36864 output values matched the real golden model bit-exactly
+[real-maxpool05 (manifest idx 11)] PASS: 73728 output values matched the real golden model bit-exactly
+ALL REAL MAXPOOL LAYERS PASS
+[real-upsample00 (manifest idx 19)] PASS: 73728 output values matched the real golden model bit-exactly
+ALL REAL UPSAMPLE LAYERS PASS
+[real-route00 (manifest idx 17)] PASS: 36864 output values matched the real golden model bit-exactly
+[real-route01 (manifest idx 20)] PASS: 221184 output values matched the real golden model bit-exactly
+ALL REAL ROUTE LAYERS PASS
+ALL CONFIGS PASS
+INFO: [SIM 1] CSim done with 0 errors.
+INFO: [SIM 3] *************** CSIM finish ***************

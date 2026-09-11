@@ -1,0 +1,36 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch CLANG as the compiler.
+   Compiling ../../../../HW/conv_engine_tb.cpp in debug mode
+   Compiling ../../../../HW/conv_engine.cpp in debug mode
+   Generating csim.exe
+pack_unpack_selftest_fast: 16,777,216 combinations (plain-int model) PASS
+pack_unpack_selftest_ap_int_sample: 216 corner + 20,000 random combinations (real ap_int types) PASS
+[config-A: baseline (out_ch == PE_OC)] PASS: 4096 output values matched the reference bit-exactly (img 16x16x3 -> 16x16x16, k=3, pad=1)
+[config-B: multi-tile, non-multiple out_ch] PASS: 3000 output values matched the reference bit-exactly (img 10x10x5 -> 10x10x30, k=3, pad=1)
+[config-C: 1x1 conv (k=1, pad=0), linear head activation] PASS: 192 output values matched the reference bit-exactly (img 8x8x4 -> 8x8x3, k=1, pad=0)
+[config-D: minimal channels (in_ch=1, out_ch=1)] PASS: 36 output values matched the reference bit-exactly (img 6x6x1 -> 6x6x1, k=3, pad=1)
+[config-E: in_ch == MAX_IN_CH boundary (128, TR-aligned)] PASS: 128 output values matched the reference bit-exactly (img 4x4x128 -> 4x4x8, k=3, pad=1)
+[config-F: in_ch not a multiple of TR (20)] PASS: 180 output values matched the reference bit-exactly (img 6x6x20 -> 6x6x5, k=3, pad=1)
+[config-G: non-square image] PASS: 504 output values matched the reference bit-exactly (img 7x12x4 -> 7x12x6, k=3, pad=1)
+[config-H: out_ch straddles a pe-pair boundary (17)] PASS: 612 output values matched the reference bit-exactly (img 6x6x6 -> 6x6x17, k=3, pad=1)
+[config-I: in_ch=MAX_IN_CH+1 (129), 2 ic_tiles w/ remainder] PASS: 64 output values matched the reference bit-exactly (img 4x4x129 -> 4x4x4, k=3, pad=1)
+[config-J: in_ch=2*MAX_IN_CH (256), 2 exact ic_tiles] PASS: 64 output values matched the reference bit-exactly (img 4x4x256 -> 4x4x4, k=3, pad=1)
+[config-K: both oc_tile and ic_tile multi-pass] PASS: 225 output values matched the reference bit-exactly (img 3x3x150 -> 3x3x25, k=3, pad=1)
+[config-A-cosim: same as config-A, full m_axi depth] PASS: 4096 output values matched the reference bit-exactly (img 16x16x3 -> 16x16x16, k=3, pad=1)
+[real-layer00 (manifest idx 0)] PASS: 2359296 output values matched the real golden model bit-exactly (img 514x290x3 -> 512x288x16, k=3, pad=0, leaky=1)
+[real-layer01 (manifest idx 2)] PASS: 1179648 output values matched the real golden model bit-exactly (img 256x144x16 -> 256x144x32, k=3, pad=1, leaky=1)
+[real-layer02 (manifest idx 4)] PASS: 589824 output values matched the real golden model bit-exactly (img 128x72x32 -> 128x72x64, k=3, pad=1, leaky=1)
+[real-layer03 (manifest idx 6)] PASS: 294912 output values matched the real golden model bit-exactly (img 64x36x64 -> 64x36x128, k=3, pad=1, leaky=1)
+[real-layer04 (manifest idx 8)] PASS: 147456 output values matched the real golden model bit-exactly (img 32x18x128 -> 32x18x256, k=3, pad=1, leaky=1)
+[real-layer05 (manifest idx 10)] PASS: 73728 output values matched the real golden model bit-exactly (img 16x9x256 -> 16x9x512, k=3, pad=1, leaky=1)
+[real-layer06 (manifest idx 12)] PASS: 147456 output values matched the real golden model bit-exactly (img 16x9x512 -> 16x9x1024, k=3, pad=1, leaky=1)
+[real-layer07 (manifest idx 13)] PASS: 36864 output values matched the real golden model bit-exactly (img 16x9x1024 -> 16x9x256, k=1, pad=0, leaky=1)
+[real-layer08 (manifest idx 14)] PASS: 73728 output values matched the real golden model bit-exactly (img 16x9x256 -> 16x9x512, k=3, pad=1, leaky=1)
+[real-layer09 (manifest idx 15)] PASS: 4320 output values matched the real golden model bit-exactly (img 16x9x512 -> 16x9x30, k=1, pad=0, leaky=0)
+[real-layer10 (manifest idx 18)] PASS: 18432 output values matched the real golden model bit-exactly (img 16x9x256 -> 16x9x128, k=1, pad=0, leaky=1)
+[real-layer11 (manifest idx 21)] PASS: 147456 output values matched the real golden model bit-exactly (img 32x18x384 -> 32x18x256, k=3, pad=1, leaky=1)
+[real-layer12 (manifest idx 22)] PASS: 17280 output values matched the real golden model bit-exactly (img 32x18x256 -> 32x18x30, k=1, pad=0, leaky=0)
+ALL REAL LAYERS PASS
+ALL CONFIGS PASS
+INFO: [SIM 1] CSim done with 0 errors.
+INFO: [SIM 3] *************** CSIM finish ***************
