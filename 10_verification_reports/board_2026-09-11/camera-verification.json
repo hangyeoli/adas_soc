@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "date": "2026-09-11",
+  "device": "/dev/video0",
+  "camera": "UVC USB2.0 PC CAMERA (Pleomax)",
+  "source": [640, 480],
+  "crop": [640, 360],
+  "network": [512, 288],
+  "capture_baseline_fps": 27.61,
+  "capture_recheck_fps": 24.102,
+  "concurrent_capture_fps": 14.88,
+  "processed_frames": 64,
+  "dropped_frames_latest_frame_policy": 1244,
+  "inference_fps": 0.739,
+  "inference_ms": 1352.92,
+  "accelerator_ms": 1349.66,
+  "jpeg_shape": [288, 512, 3],
+  "jpeg_status_overlay": true,
+  "clean_stop_returncode": 0,
+  "restart_left_orphan_process": false,
+  "http_assets_status": 200
+}

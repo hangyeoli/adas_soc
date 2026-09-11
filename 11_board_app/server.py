@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import secrets
+import signal
 import socket
 import subprocess
 import threading
@@ -23,6 +24,7 @@ if not TOKEN_FILE.exists():
 TOKEN = TOKEN_FILE.read_text().strip()
 guard = threading.Lock()
 job = {'busy': False, 'action': None, 'returncode': None}
+process = None
 
 
 def read(path, default=None):
@@ -55,23 +57,30 @@ def snapshot():
     temp_raw = read('/sys/class/thermal/thermal_zone0/temp')
     if temp_raw is None:
         temp_raw = read('/sys/class/hwmon/hwmon0/temp1_input')
+    camera = read_json(RESULTS / 'camera.json')
     return {'host': socket.gethostname(), 'kernel': os.uname().release, 'time': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()), 'job': current,
             'fpga': fpga, 'fpga_ready': verified_load, 'manager_state': read('/sys/class/fpga_manager/fpga0/state'),
             'clock_hz': read('/sys/kernel/debug/clk/pl0_ref/clk_rate'), 'memory': mem,
             'temperature_c': float(temp_raw) / 1000 if temp_raw is not None else None,
             'cameras': sorted(str(p) for p in Path('/dev').glob('video*')),
-            'report': read_json(RESULTS / ('progress.json' if current['busy'] and current['action'] != 'load' else 'latest.json')),
+            'report': read_json(RESULTS / ('progress.json' if current['busy'] and current['action'] in ('layer0', 'full') else 'latest.json')),
             'layer0': read_json(RESULTS / 'layer0.json'), 'full': read_json(RESULTS / 'full.json'),
+            'camera': camera,
             'log': (read(RESULTS / 'console.log', '') or '')[-24000:], 'boot_id': boot}
 
 
 def run_action(action):
+    global process
     try:
         with (RESULTS / 'console.log').open('w') as log:
             log.write(f'{time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())} | {action}\n')
             log.flush()
-            proc = subprocess.Popen(['/usr/bin/python3', '-u', str(APP / 'hardware.py'), action], cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
-            code = proc.wait()
+            command = ['/usr/bin/python3', '-u', str(APP / ('camera.py' if action == 'camera' else 'hardware.py'))]
+            if action != 'camera':
+                command.append(action)
+            process = subprocess.Popen(command, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
+            code = process.wait()
+            process = None
         with guard:
             job.update(busy=False, returncode=code)
     except Exception as exc:
@@ -79,6 +88,17 @@ def run_action(action):
             log.write(str(exc))
         with guard:
             job.update(busy=False, returncode=-1)
+
+
+def terminate(signum, frame):
+    """Let a live frame finish so the accelerator no longer owns DMA buffers."""
+    if process and process.poll() is None:
+        (RESULTS / 'camera.stop').touch()
+        try:
+            process.wait(timeout=8)
+        except subprocess.TimeoutExpired:
+            process.terminate()
+    raise SystemExit(0)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -101,7 +121,14 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond(snapshot())
         if path == '/api/report':
             return self.respond(snapshot())
-        assets = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8')}
+        if path == '/api/camera.jpg':
+            if not hmac.compare_digest(self.headers.get('X-Control-Token', ''), TOKEN):
+                return self.respond({'error': 'Camera frame requires the control token'}, status=403)
+            frame = RESULTS / 'camera.jpg'
+            if frame.exists():
+                return self.respond(frame.read_bytes(), 'image/jpeg')
+            return self.respond({'error': 'Camera frame is not ready'}, status=404)
+        assets = {'/': ('index.html', 'text/html; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/style.css': ('style.css', 'text/css; charset=utf-8'), '/live.css': ('live.css', 'text/css; charset=utf-8')}
         if path in assets:
             name, mime = assets[path]
             return self.respond((APP / 'static' / name).read_bytes(), mime)
@@ -113,7 +140,13 @@ class Handler(BaseHTTPRequestHandler):
         origin = self.headers.get('Origin')
         if origin and urlsplit(origin).netloc != self.headers.get('Host'):
             return self.respond({'error': 'Origin rejected'}, status=403)
-        action = {'/api/load': 'load', '/api/layer0': 'layer0', '/api/full': 'full'}.get(self.path)
+        if self.path == '/api/camera/stop':
+            with guard:
+                if not job['busy'] or job['action'] != 'camera':
+                    return self.respond({'error': '카메라 스트리밍이 실행 중이 아닙니다.'}, status=409)
+                (RESULTS / 'camera.stop').touch()
+            return self.respond({'stopping': 'camera'}, status=202)
+        action = {'/api/load': 'load', '/api/layer0': 'layer0', '/api/full': 'full', '/api/camera/start': 'camera'}.get(self.path)
         if action is None:
             return self.respond({'error': 'Unknown action'}, status=404)
         with guard:
@@ -132,5 +165,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 if __name__ == '__main__':
+    signal.signal(signal.SIGTERM, terminate)
+    signal.signal(signal.SIGINT, terminate)
     print('KR260 dashboard listening on :8080', flush=True)
     ThreadingHTTPServer(('0.0.0.0', 8080), Handler).serve_forever()

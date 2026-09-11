@@ -30,6 +30,7 @@ AMD Kria KR260에서 YOLOv3-tiny INT8 네트워크를 실행하고, FPGA 상태�
 - 연산별 완료 상태와 실행 시간 기록
 - Layer 0과 두 detection head의 byte-exact 비교
 - 웹 UI에서 재실행, 로그 조회 및 결과 다운로드
+- Pleomax UVC 카메라 전처리, FPGA 실시간 반복 실행, YOLO decode/NMS와 검출 상자 표시
 
 ## 시스템 구성
 
@@ -40,6 +41,8 @@ flowchart LR
         UI --> Runtime[Python 실행기]
         Descriptor[22-op descriptor] --> Runtime
         Sample[저장된 INT8 입력·모델] --> DDR[CMA / DMA-BUF]
+        Camera[Pleomax UVC 카메라] --> Preprocess[Crop · Resize · RGB INT8]
+        Preprocess --> DDR
         Runtime --> Bridge[커널 DMA bridge]
         Bridge --> DDR
         Golden[골든 정답] --> Compare[출력 비교·보고서]
@@ -51,11 +54,13 @@ flowchart LR
     Engines <-->|HP0 / HP1| DDR
     DDR --> Compare
     Compare --> UI
+    DDR --> Decode[Decode · NMS · BBox]
+    Decode --> UI
 ```
 
 현재 Linux 실행기는 4-IP `system_bringup_wrapper`를 사용합니다. 함께 포함된 `sys5_wrapper`는 별도 Layer-0 엔진을 가진 5-IP export이며 현재 웹 UI의 로딩 대상이 아닙니다.
 
-FPGA는 정수 네트워크 연산과 raw detection head 생성까지 담당합니다. 현재 공개된 실행 경로는 저장 샘플 검증이며, 카메라 캡처·YOLO decode/NMS·검출 상자 표시는 아직 통합되지 않았습니다.
+FPGA는 정수 네트워크 연산과 raw detection head 생성까지 담당합니다. 실행기는 Pleomax UVC 카메라의 640×480 프레임을 중앙 640×360으로 자르고 512×288로 변환한 뒤 signed INT8 CMA DMA 입력으로 전달합니다. 두 raw head는 CPU에서 YOLO decode와 class별 NMS를 거쳐 웹 UI의 검출 상자로 표시됩니다.
 
 ## 실보드 검증 결과
 
@@ -70,10 +75,12 @@ Ubuntu 24.04.2 LTS, kernel `6.8.0-1015-xilinx` 환경에서 웹 UI로 FPGA를 �
 | Detection head 2 | 17,280 bytes, 불일치 **0** |
 | IP 연산 시간 합계 | **1,342.020 ms** |
 | 버퍼 준비·비교 포함 시간 | **3,281.149 ms** |
+| 카메라 단독 캡처 | **27.61 fps** 기준값, 재측정 24.10 fps |
+| 카메라 + FPGA 전체 추론 | **0.739 fps**, 1,352.92 ms/프레임 |
 
 연산 시간은 각 IP의 시작부터 완료까지 측정한 합계이며 Python polling 지연을 포함합니다. 단일 저장 샘플 측정값이므로 카메라 FPS나 전체 앱 성능을 뜻하지 않습니다. 중간 출력 19개의 개별 정답 비교는 수행하지 않았습니다.
 
-[검증 결과 설명](10_verification_reports/board_2026-09-11/README.md) · [실측 JSON 보고서](10_verification_reports/board_2026-09-11/verification.json)
+[검증 결과 설명](10_verification_reports/board_2026-09-11/README.md) · [실측 JSON 보고서](10_verification_reports/board_2026-09-11/verification.json) · [카메라 통합 결과](10_verification_reports/board_2026-09-11/camera-verification.json)
 
 ## 저장소 구조
 
@@ -124,7 +131,7 @@ grep -E 'CmaTotal|CmaFree' /proc/meminfo
 ssh ubuntu@<KR260_IP>
 
 sudo apt-get update
-sudo apt-get install -y git python3 gcc make libc6-dev \
+sudo apt-get install -y git python3 python3-opencv gcc make libc6-dev \
   device-tree-compiler linux-headers-$(uname -r)
 
 cd /home/ubuntu
@@ -181,9 +188,10 @@ UI의 **실행 제어 키**에 입력하고 저장하세요. 이 키는 SSH 비�
 | 1 | **FPGA 로딩** | 검증된 4-IP bitstream과 100 MHz 클록 설정 |
 | 2 | **Layer 0 검증** | 첫 Conv 실행 후 2,359,296 bytes 비교 |
 | 3 | **전체 체인 검증** | 22개 연산 실행 후 Layer 0과 두 head 비교 |
-| 4 | **결과 다운로드** | 상태, 검증 보고서, 로그를 JSON으로 저장 |
+| 4 | **카메라 추론 시작/중지** | 최신 카메라 프레임을 전체 FPGA 체인으로 반복 실행 |
+| 5 | **결과 다운로드** | 상태, 검증 보고서, 로그를 JSON으로 저장 |
 
-전체 체인 검증에는 Layer 0 검증도 포함됩니다. UI는 FPGA 상태, 연산 시간, 온도, CMA 여유 공간, 카메라 장치 유무와 실행 로그를 2초 간격으로 갱신합니다. 카메라가 표시되어도 현재 검증 입력은 저장된 샘플입니다.
+전체 체인 검증에는 Layer 0 검증도 포함됩니다. UI는 FPGA 상태, 연산 시간, 온도, 카메라 장치와 실행 로그를 2초 간격으로 갱신합니다. **카메라 추론 시작**을 누르면 실제 `/dev/video0` 입력, 캡처/추론 FPS, 건너뛴 프레임, Decode/NMS 검출 결과와 상자를 표시합니다. 100 MHz 구성의 전체 FPGA 실행은 약 1.3초/프레임이므로 캡처 스레드는 오래된 프레임을 쌓지 않고 최신 프레임만 전달합니다.
 
 ## 터미널에서 실행하기
 
@@ -195,6 +203,7 @@ cd /home/ubuntu/KR260_ADAS_SoC
 sudo python3 11_board_app/hardware.py load
 sudo python3 11_board_app/hardware.py layer0
 sudo python3 11_board_app/hardware.py full
+sudo python3 11_board_app/camera.py
 ```
 
 성공 시 `status`가 `passed`이고 종료 코드는 `0`입니다. 정답 비교의 `mismatches`도 `0`이어야 합니다. IP 완료 신호만으로 수치 정확도 통과를 판단하지 않습니다.

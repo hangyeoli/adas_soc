@@ -1,7 +1,7 @@
 # KR260 보드 검증 UI
 
-Ubuntu의 실제 FPGA에 저장된 INT8 입력을 넣고 결과를 비교하는 도구입니다.
-카메라나 PyTorch, PYNQ 설치가 필요하지 않습니다.
+Ubuntu의 실제 FPGA에 저장된 INT8 입력을 넣어 정답과 비교하고, USB 카메라 프레임을
+실시간 추론하는 도구입니다. 저장 샘플 검증에는 카메라나 PyTorch, PYNQ가 필요하지 않습니다.
 
 프로젝트 소개와 최초 설치 순서는 [프로젝트 README](../README.md)를 참고하세요.
 아래 명령은 보드에 프로젝트와 필요한 시스템 구성요소가 준비된 상태에서 실행합니다.
@@ -11,7 +11,7 @@ Ubuntu의 실제 FPGA에 저장된 INT8 입력을 넣고 결과를 비교하는 
 ```bash
 cd ~/KR260_ADAS_SoC
 sudo apt-get update
-sudo apt-get install -y python3 gcc make libc6-dev device-tree-compiler linux-headers-$(uname -r)
+sudo apt-get install -y python3 python3-opencv gcc make libc6-dev device-tree-compiler linux-headers-$(uname -r)
 make -C 11_board_app/dma_bridge
 sudo install -D -m 644 11_board_app/dma_bridge/kr260_dma.ko /lib/modules/$(uname -r)/extra/kr260_dma.ko
 sudo depmod -a
@@ -32,6 +32,23 @@ sudo systemctl enable --now kr260-adas-ui
 
 서비스는 부팅 시 UI만 실행합니다. FPGA는 UI의 **FPGA 로딩** 버튼으로 적재합니다.
 현재 부팅과 다른 로딩 기록으로 하드웨어를 실행하지 않습니다.
+
+## 실시간 카메라 추론
+
+Pleomax UVC 카메라를 `/dev/video0`에 연결하고 UI의 **카메라 추론 시작**을 누릅니다.
+입력은 `640×480 BGR → 중앙 640×360 crop → 512×288 resize → RGB → signed INT8 → 1픽셀 -128 padding`으로
+변환됩니다. FPGA의 22개 연산 뒤 두 detection head를 decode하고 class별 NMS를 적용해 상자를 표시합니다.
+카메라 캡처와 FPGA 실행은 분리되어 있으며, 처리 지연을 누적하지 않도록 항상 최신 프레임만 선택합니다.
+현재 100 MHz 구성에서는 카메라가 약 27.6 fps로 들어오지만 전체 FPGA 추론은 약 1.3초/프레임이므로,
+UI의 `건너뛴 캡처 프레임`은 오류가 아니라 의도한 최신 프레임 처리 결과입니다.
+
+터미널에서는 다음과 같이 같은 경로를 실행할 수 있습니다.
+
+```bash
+sudo python3 11_board_app/camera.py
+# 다른 터미널에서 정상 종료
+sudo touch 11_board_app/results/camera.stop
+```
 
 ## 검증 범위
 
@@ -55,6 +72,7 @@ sudo systemctl enable --now kr260-adas-ui
 - 결과는 `results/layer0.json`, `results/full.json`, `results/latest.json`에 저장됩니다.
   실제 출력은 `results/layer_00_actual.bin`, `layer_15_actual.bin`, `layer_22_actual.bin`입니다.
   UI의 결과 다운로드는 현재 상태와 보고서, 로그를 JSON으로 저장합니다.
+- 실시간 결과는 `results/camera.json`과 `results/camera.jpg`에 원자적으로 갱신됩니다.
 
 ## 알려진 버전 차이 및 로딩 복구
 
