@@ -493,7 +493,54 @@ ROW_LOOP:
                     }
                 }
             } else {
+                // Conv0-only word cache (2026-09-11, CAMERA_PERFORMANCE_REVIEW.md
+                // optimization #1): only layer 0 (in_ch=3) ever reaches this
+                // branch (every other real layer's in_ch is a multiple of 4 -
+                // see the FAST/SLOW split comment above), so this change is
+                // scoped to layer 0's input path without any explicit
+                // "if (layer==0)" - it simply never executes for any other
+                // real layer.
+                //
+                // Problem: `flat` advances by exactly 1 per `ic`, but the
+                // underlying DRAM word is 4 channels wide (pack4_t). Since
+                // in_ch=3 does not divide PACK4_LANES=4, a given pixel's 3
+                // channels sometimes share ONE word (whenever
+                // flat_start % 4 <= 1, so ic=0,1,2 all land before the next
+                // word boundary) - the unmodified loop below issued a
+                // separate `ifmap[...]` read every iteration regardless,
+                // re-fetching the SAME word from DDR 2-3 times per pixel.
+                // That is exactly the repeated-element-access pattern
+                // CAMERA_PERFORMANCE_REVIEW.md's Conv0 review flags
+                // ("READ_CH_ELEMS는 같은 32-bit word를 채널마다 다시 읽을 수
+                // 있다") and Conv0 is the single largest real-hardware
+                // contributor (381.48 ms / 28.39% of the 100-frame total,
+                // board_2026-09-11/latency-ranking.md) - unlike this same
+                // branch's earlier, narrower "hoist in_bounds for burst
+                // inference" experiment (see this function's history above),
+                // which measured near-zero gain in isolation because it only
+                // targeted AR-handshake overhead, not repeated word fetches.
+                //
+                // Fix: memoize the last-fetched word and its word index
+                // ACROSS ic iterations within one pixel (both locals are
+                // fresh each COL_LOOP iteration, since this whole branch is
+                // nested inside COL_LOOP's body) - re-read `ifmap[]` only
+                // when this iteration's word index differs from the cached
+                // one. Same "conditionally EXECUTED, not conditionally
+                // selected" if/else style as `in_bounds` above (a cache hit
+                // must skip the AXI transaction outright, not just discard
+                // its result), and the same PIPELINE II=1 shape - this only
+                // adds a compare-and-bypass mux on an existing register, not
+                // a new loop-carried dependency chain, so it is not expected
+                // to change achieved II. Bit-exact by construction: `v` is
+                // set to the IDENTICAL word content either way (a fresh read
+                // vs. a cached copy of that same address's most recent
+                // read), so `pack4_get(v, flat % PACK4_LANES)` is unaffected -
+                // verified below via conv_engine_tb.cpp's existing
+                // real-layer-0 csim comparison, not by inspection alone.
             READ_CH_ELEMS:
+                pack4_t cached_word = 0;
+                unsigned cached_word_idx = 0;
+                bool cached_valid = false;
                 for (unsigned ic = 0; ic < ic_count; ic++) {
 #pragma HLS PIPELINE II=1
 #pragma HLS LOOP_TRIPCOUNT min=1 max=MAX_IN_CH
@@ -501,7 +548,16 @@ ROW_LOOP:
                     if (in_bounds) {
                         unsigned flat =
                             ((unsigned)in_r * img_w + in_c) * in_ch + (ic_lo + ic);
-                        pack4_t v = ifmap[flat / PACK4_LANES];
+                        unsigned word_idx = flat / PACK4_LANES;
+                        pack4_t v;
+                        if (cached_valid && word_idx == cached_word_idx) {
+                            v = cached_word;
+                        } else {
+                            v = ifmap[word_idx];
+                            cached_word = v;
+                            cached_word_idx = word_idx;
+                            cached_valid = true;
+                        }
                         val = pack4_get(v, flat % PACK4_LANES);
                     }
                     px[ic] = val;
